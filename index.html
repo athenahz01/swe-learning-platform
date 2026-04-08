@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SWE Mastery — 60-Day Software Engineering Bootcamp</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- CodeMirror for code editor -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="nav-brand">
+      <span class="logo">&#9889;</span> SWE Mastery
+    </div>
+    <div class="nav-links">
+      <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
+      <a href="#" class="nav-link" data-page="roadmap">Roadmap</a>
+      <a href="#" class="nav-link" data-page="practice">Practice</a>
+      <a href="#" class="nav-link" data-page="resources">Resources</a>
+    </div>
+    <div class="nav-progress">
+      <span id="overall-progress-text">0% Complete</span>
+      <div class="mini-progress-bar">
+        <div class="mini-progress-fill" id="nav-progress-fill"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <main id="page-dashboard" class="page active">
+    <header class="hero">
+      <h1>Your 60-Day SWE Journey</h1>
+      <p class="subtitle">From vibe-coder to job-ready software engineer. You already know SQL — let's build on that.</p>
+    </header>
+
+    <section class="dashboard-grid">
+      <div class="dash-card streak-card">
+        <div class="dash-icon">&#128293;</div>
+        <div class="dash-info">
+          <h3 id="streak-count">0</h3>
+          <p>Day Streak</p>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">&#9989;</div>
+        <div class="dash-info">
+          <h3 id="topics-done">0 / 40</h3>
+          <p>Topics Completed</p>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">&#128187;</div>
+        <div class="dash-info">
+          <h3 id="problems-solved">0</h3>
+          <p>Problems Solved</p>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-icon">&#128197;</div>
+        <div class="dash-info">
+          <h3 id="current-week">Week 1</h3>
+          <p>Current Week</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="today-section">
+      <h2>Today's Focus</h2>
+      <div id="today-focus" class="today-card">
+        <!-- Filled by JS -->
+      </div>
+    </section>
+
+    <section class="progress-section">
+      <h2>Skill Progress</h2>
+      <div id="skill-bars" class="skill-bars">
+        <!-- Filled by JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== ROADMAP ===================== -->
+  <main id="page-roadmap" class="page">
+    <header class="page-header">
+      <h1>8-Week Learning Roadmap</h1>
+      <p class="subtitle">Click any topic to see details. Check off topics as you complete them.</p>
+    </header>
+    <div id="roadmap-container" class="roadmap-container">
+      <!-- Filled by JS -->
+    </div>
+  </main>
+
+  <!-- ===================== PRACTICE ===================== -->
+  <main id="page-practice" class="page">
+    <header class="page-header">
+      <h1>Practice Problems</h1>
+      <p class="subtitle">LeetCode-style challenges sorted by topic and difficulty</p>
+    </header>
+
+    <div class="practice-layout">
+      <aside class="problem-sidebar">
+        <div class="filter-group">
+          <label>Difficulty</label>
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-difficulty="all">All</button>
+            <button class="filter-btn easy" data-difficulty="easy">Easy</button>
+            <button class="filter-btn medium" data-difficulty="medium">Medium</button>
+            <button class="filter-btn hard" data-difficulty="hard">Hard</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Topic</label>
+          <select id="topic-filter">
+            <option value="all">All Topics</option>
+          </select>
+        </div>
+        <div id="problem-list" class="problem-list">
+          <!-- Filled by JS -->
+        </div>
+      </aside>
+
+      <div class="editor-area">
+        <div class="problem-description" id="problem-description">
+          <h3>Select a problem to begin</h3>
+          <p>Choose a problem from the sidebar to start practicing.</p>
+        </div>
+        <div class="editor-container">
+          <div class="editor-toolbar">
+            <select id="language-select">
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+            </select>
+            <button id="run-btn" class="btn btn-run">&#9654; Run Code</button>
+            <button id="submit-btn" class="btn btn-submit">Submit</button>
+          </div>
+          <div id="code-editor"></div>
+          <div class="output-panel">
+            <h4>Output</h4>
+            <pre id="output"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== LEARN (Full Lesson Viewer) ===================== -->
+  <main id="page-learn" class="page">
+    <div class="lesson-layout">
+      <aside class="lesson-sidebar">
+        <button class="btn btn-back" id="lesson-back">&larr; Back to Roadmap</button>
+        <h4 id="lesson-sidebar-title">Lesson Sections</h4>
+        <nav id="lesson-nav" class="lesson-nav">
+          <!-- Filled by JS -->
+        </nav>
+        <div class="lesson-sidebar-progress">
+          <div class="lesson-progress-bar">
+            <div class="lesson-progress-fill" id="lesson-progress-fill"></div>
+          </div>
+          <span id="lesson-progress-text">Section 0 / 0</span>
+        </div>
+      </aside>
+      <div class="lesson-content-area">
+        <div id="lesson-content" class="lesson-content">
+          <!-- Filled by JS -->
+        </div>
+        <div class="lesson-footer">
+          <button class="btn btn-secondary" id="lesson-prev">&larr; Previous</button>
+          <button class="btn btn-primary" id="lesson-next">Next Section &rarr;</button>
+          <button class="btn btn-complete hidden" id="lesson-complete">Mark Complete &check;</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== RESOURCES ===================== -->
+  <main id="page-resources" class="page">
+    <header class="page-header">
+      <h1>Curated Resources</h1>
+      <p class="subtitle">Free and high-quality learning materials for each phase</p>
+    </header>
+    <div id="resources-container" class="resources-container">
+      <!-- Filled by JS -->
+    </div>
+  </main>
+
+  <!-- Topic detail modal (kept for quick previews) -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="lessons.js"></script>
+  <script src="lessons2.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
