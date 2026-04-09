@@ -6,6 +6,7 @@
 const STATE = {
   completedTopics: JSON.parse(localStorage.getItem('swe_completed_topics') || '[]'),
   solvedProblems: JSON.parse(localStorage.getItem('swe_solved_problems') || '[]'),
+  sectionProgress: JSON.parse(localStorage.getItem('swe_section_progress') || '{}'),
   streak: parseInt(localStorage.getItem('swe_streak') || '0'),
   lastVisit: localStorage.getItem('swe_last_visit') || null,
   startDate: localStorage.getItem('swe_start_date') || null,
@@ -14,9 +15,24 @@ const STATE = {
 function saveState() {
   localStorage.setItem('swe_completed_topics', JSON.stringify(STATE.completedTopics));
   localStorage.setItem('swe_solved_problems', JSON.stringify(STATE.solvedProblems));
+  localStorage.setItem('swe_section_progress', JSON.stringify(STATE.sectionProgress));
   localStorage.setItem('swe_streak', STATE.streak.toString());
   localStorage.setItem('swe_last_visit', STATE.lastVisit);
   localStorage.setItem('swe_start_date', STATE.startDate);
+}
+
+function markSectionRead(topicId, sectionIndex) {
+  if (!STATE.sectionProgress[topicId]) {
+    STATE.sectionProgress[topicId] = [];
+  }
+  if (!STATE.sectionProgress[topicId].includes(sectionIndex)) {
+    STATE.sectionProgress[topicId].push(sectionIndex);
+    saveState();
+  }
+}
+
+function getSectionsRead(topicId) {
+  return STATE.sectionProgress[topicId] || [];
 }
 
 // Initialize start date on first visit
@@ -406,9 +422,13 @@ function openLesson(topicId) {
   // Populate sidebar
   document.getElementById('lesson-sidebar-title').textContent = topic.title;
   const nav = document.getElementById('lesson-nav');
-  nav.innerHTML = lesson.sections.map((s, i) => `
-    <div class="lesson-nav-item ${i === 0 ? 'active' : ''}" data-index="${i}">${s.title}</div>
-  `).join('');
+  const readSections = getSectionsRead(topicId);
+  nav.innerHTML = lesson.sections.map((s, i) => {
+    const isRead = readSections.includes(i);
+    return `<div class="lesson-nav-item ${i === 0 ? 'active' : ''} ${isRead ? 'read' : ''}" data-index="${i}">
+      <span class="nav-check">${isRead ? '&#10003;' : ''}</span>${s.title}
+    </div>`;
+  }).join('');
 
   nav.querySelectorAll('.lesson-nav-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -467,7 +487,23 @@ function renderLessonSection() {
     `;
   }
 
+  // Show key takeaways on the last section
+  const isLastSection = currentSectionIndex === lesson.sections.length - 1;
+  if (isLastSection && lesson.takeaways && lesson.takeaways.length > 0) {
+    html += `
+      <div class="lesson-takeaways">
+        <div class="lesson-takeaways-title">Key Takeaways</div>
+        <ul class="takeaways-list">
+          ${lesson.takeaways.map(t => `<li>${t}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
   content.innerHTML = html;
+
+  // Mark current section as read
+  markSectionRead(lesson.topicId, currentSectionIndex);
 
   // Wire up quiz buttons
   content.querySelectorAll('.quiz-option').forEach(btn => {
@@ -482,9 +518,14 @@ function renderLessonSection() {
     });
   });
 
-  // Update sidebar nav
+  // Update sidebar nav with read status
+  const readSections = getSectionsRead(lesson.topicId);
   document.querySelectorAll('.lesson-nav-item').forEach((item, i) => {
     item.classList.toggle('active', i === currentSectionIndex);
+    if (readSections.includes(i)) {
+      item.classList.add('read');
+      item.querySelector('.nav-check').innerHTML = '&#10003;';
+    }
     if (i < currentSectionIndex) item.classList.add('visited');
   });
 

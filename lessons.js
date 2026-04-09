@@ -1,5 +1,12 @@
 const LESSONS = {
   "w1t1": {
+    takeaways: [
+      "Compiled languages translate all code before running; interpreted languages translate line-by-line",
+      "RAM is your program's workspace (fast, temporary); storage is permanent but slower",
+      "The stack holds function calls and local variables; the heap holds objects and arrays",
+      "A runtime (Node.js, browser, CPython) is the software that actually executes your code",
+      "Variables on the stack disappear when their function returns; heap data persists until garbage collected"
+    ],
     sections: [
       {
         title: "What Actually Happens When You Run Code?",
@@ -102,6 +109,13 @@ let user = { name: "Athena", age: 20 };
   },
 
   "w1t2": {
+    takeaways: [
+      "Primitives (numbers, strings, booleans) are copied by value; objects and arrays are copied by reference",
+      "Two variables can point to the same object -- changing one changes both",
+      "Use spread syntax [...arr] or {...obj} to make a true copy",
+      "Always use === (strict equality) in JavaScript; == does sneaky type coercion",
+      "Falsy values: false, 0, empty string, null, undefined, NaN -- everything else is truthy"
+    ],
     sections: [
       {
         title: "Beyond 'let x = 5' — What Variables Really Are",
@@ -204,6 +218,13 @@ const newNums = [...nums, 4];  // create new array instead of mutating
   },
 
   "w1t3": {
+    takeaways: [
+      "if/else is the programming version of SQL's WHERE clause -- it controls which code runs",
+      "Use for...of for arrays and for...in for object keys -- never mix them up",
+      "The ?? operator only checks for null/undefined; || treats 0 and empty string as falsy too",
+      "Early returns reduce nesting and make functions easier to read",
+      "Short-circuit evaluation lets you safely access properties on potentially null objects"
+    ],
     sections: [
       {
         title: "Conditionals — Making Decisions in Code",
@@ -310,6 +331,13 @@ function processUser(user) {
   },
 
   "w1t4": {
+    takeaways: [
+      "Arrow functions are the modern default; use them unless you need 'this' binding",
+      "Pure functions always return the same output for the same input and have no side effects",
+      "A closure is a function that remembers variables from the scope where it was created",
+      "map, filter, and reduce are higher-order functions -- they take functions as arguments",
+      "Closures let you create private variables that no outside code can touch directly"
+    ],
     sections: [
       {
         title: "Functions Are the Most Important Abstraction",
@@ -454,6 +482,13 @@ numbers.every(n => n > 5); // false (not all > 5)`,
   },
 
   "w1t5": {
+    takeaways: [
+      "Strings are immutable -- every string method returns a new string, never modifies the original",
+      ".sort() without a comparator sorts by string value, so always pass (a, b) => a - b for numbers",
+      "Use split() to turn strings into arrays and join() to turn arrays back into strings",
+      "new Set(array) instantly removes duplicates -- like SELECT DISTINCT",
+      "Build a frequency map (object or Map) to count occurrences -- a universal interview pattern"
+    ],
     sections: [
       {
         title: "String Methods You'll Use Every Day",
@@ -567,6 +602,12 @@ function charCount(str) {
   },
 
   "w2t1": {
+    takeaways: [
+      "Array access by index is O(1) because elements sit in contiguous memory slots",
+      "Inserting at the start of an array is O(n) -- every element must shift over",
+      "Dynamic arrays double in capacity when full, making average push still O(1) amortized",
+      "The rare O(n) resize cost is spread across many O(1) pushes -- that is amortized analysis"
+    ],
     sections: [
       {
         title: "Arrays in Memory — Why They're Fast (and Slow)",
@@ -644,6 +685,13 @@ class DynamicArray {
   },
 
   "w2t2": {
+    takeaways: [
+      "A linked list node holds a value and a pointer to the next node -- no contiguous memory needed",
+      "Inserting or deleting at the head of a linked list is O(1) -- no shifting required",
+      "Accessing the nth element is O(n) because you must walk the chain from the head",
+      "Reversing a linked list in-place is the most common linked list interview question",
+      "The fast/slow pointer technique detects cycles and finds the middle in one pass"
+    ],
     sections: [
       {
         title: "What Is a Linked List?",
@@ -793,6 +841,12 @@ function findMiddle(head) {
   },
 
   "w2t3": {
+    takeaways: [
+      "A stack is Last-In-First-Out (LIFO) -- push and pop from the top only, both O(1)",
+      "The call stack tracks function calls; every return pops a frame off the stack",
+      "Whenever you see matching or nesting (parentheses, HTML tags), think stack",
+      "In JavaScript, just use a plain array with push() and pop() as your stack"
+    ],
     sections: [
       {
         title: "Stacks — Last In, First Out",
@@ -876,6 +930,12 @@ class MinStack {
   },
 
   "w2t4": {
+    takeaways: [
+      "A queue is First-In-First-Out (FIFO) -- add to the back, remove from the front",
+      "Queues power Breadth-First Search (BFS), which explores level by level",
+      "Use a stack for undo (most recent first); use a queue for task processing (oldest first)",
+      "Array shift() is O(n) -- for performance-critical queues, use a linked list instead"
+    ],
     sections: [
       {
         title: "Queues — First In, First Out",
@@ -943,6 +1003,13 @@ function processJobs(jobs) {
   },
 
   "w2t5": {
+    takeaways: [
+      "Hash tables give O(1) average lookup, insert, and delete -- the most versatile data structure",
+      "A hash function converts a key into an array index; collisions are handled by chaining",
+      "Use Map for key-value pairs and Set for unique membership checks",
+      "When a problem says 'find', 'count', or 'group', a hash map is almost always the answer",
+      "Two Sum is solved in O(n) with a hash map by looking up each element's complement"
+    ],
     sections: [
       {
         title: "Hash Tables — The Most Important Data Structure",
@@ -1044,6 +1111,13 @@ function hasDuplicates(arr) {
   },
 
   "w3t1": {
+    takeaways: [
+      "Big O describes how performance scales with input size, not exact speed",
+      "O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(2^n) -- memorize this ranking",
+      "Nested loops over the same data usually mean O(n^2); a hash map can often reduce it to O(n)",
+      "Space complexity measures extra memory used beyond the input itself",
+      "When adding complexities, only the largest term matters: O(n) + O(n log n) = O(n log n)"
+    ],
     sections: [
       {
         title: "Big O — The Language of Efficiency",
@@ -1158,6 +1232,12 @@ function removeDuplicates(arr) {
   },
 
   "w3t2": {
+    takeaways: [
+      "Binary search eliminates half the data each step, giving O(log n) -- about 20 steps for a million items",
+      "Binary search only works on sorted data -- always confirm the input is sorted first",
+      "The 'find first occurrence' variation keeps searching left even after finding a match",
+      "Database indexes use a similar principle (B-trees) to avoid scanning every row"
+    ],
     sections: [
       {
         title: "Binary Search — The Power of Halving",
@@ -1236,6 +1316,12 @@ function searchInsert(arr, target) {
   },
 
   "w3t3": {
+    takeaways: [
+      "O(n log n) is the fastest possible comparison-based sort -- you cannot beat it",
+      "Merge sort splits, recursively sorts halves, then merges -- classic divide and conquer",
+      "Bubble sort and insertion sort are O(n^2) -- know them conceptually but never use them at scale",
+      "Insertion sort is actually fast on nearly-sorted data, which is why hybrid sorts use it"
+    ],
     sections: [
       {
         title: "Sorting — Why You Need to Understand It",
@@ -1327,6 +1413,12 @@ function merge(left, right) {
   },
 
   "w3t4": {
+    takeaways: [
+      "Every recursive function needs a base case (when to stop) and a recursive case (smaller subproblem)",
+      "Forgetting the base case causes infinite recursion and a stack overflow error",
+      "Backtracking is recursion plus undo -- make a choice, explore, then reverse the choice",
+      "Naive recursive Fibonacci is O(2^n) -- later you will fix it with dynamic programming"
+    ],
     sections: [
       {
         title: "Recursion — Functions That Call Themselves",
@@ -1403,6 +1495,13 @@ function permutations(nums) {
   },
 
   "w3t5": {
+    takeaways: [
+      "Two pointers on sorted data can replace O(n^2) brute force with a single O(n) pass",
+      "Converging pointers start at both ends; same-direction pointers start together with one moving faster",
+      "Sliding window tracks a moving subarray and updates incrementally instead of recalculating from scratch",
+      "Use sliding window for contiguous subarray/substring problems; use two pointers for pair-finding on sorted data",
+      "These techniques come up constantly in interviews -- recognize the pattern by problem shape"
+    ],
     sections: [
       {
         title: "Two Pointers — The O(n²) Killer",
@@ -1501,6 +1600,13 @@ function longestUnique(s) {
   },
 
   "w4t1": {
+    takeaways: [
+      "A binary tree node has a value, a left child, and a right child -- at most two children",
+      "Inorder traversal (left, root, right) gives sorted order on a binary search tree",
+      "Preorder is root-first (good for copying); postorder is root-last (good for deleting)",
+      "Level-order traversal uses a queue to visit nodes breadth-first, level by level",
+      "Most tree problems are solved with recursion: solve for the current node, trust the recursive calls"
+    ],
     sections: [
       {
         title: "Binary Trees — Your First Hierarchical Structure",

@@ -921,9 +921,13 @@ body {
   border-left: 3px solid transparent;
 }
 
+.lesson-nav-item { display: flex; align-items: center; gap: 0.4rem; }
 .lesson-nav-item:hover { background: var(--bg-card-hover); color: var(--text); }
 .lesson-nav-item.active { background: rgba(99, 102, 241, 0.1); color: var(--accent); border-left-color: var(--accent); }
 .lesson-nav-item.visited { color: var(--text); }
+.lesson-nav-item.read { color: var(--green); }
+.lesson-nav-item.read.active { color: var(--accent); }
+.nav-check { font-size: 0.75rem; color: var(--green); min-width: 1rem; }
 
 .lesson-sidebar-progress {
   margin-top: 1rem;
@@ -1134,6 +1138,44 @@ body {
 .lesson-callout p {
   color: var(--text-muted);
   margin-bottom: 0;
+}
+
+/* Key Takeaways Card */
+.lesson-takeaways {
+  background: rgba(34, 197, 94, 0.06);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0 1rem;
+}
+
+.lesson-takeaways-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--green);
+  margin-bottom: 0.75rem;
+}
+
+.takeaways-list {
+  list-style: none;
+  padding: 0;
+}
+
+.takeaways-list li {
+  position: relative;
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.takeaways-list li::before {
+  content: "\2713";
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
 }
 
 .lesson-footer {

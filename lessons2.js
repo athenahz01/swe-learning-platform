@@ -9,6 +9,13 @@ const LESSONS_2 = {
   // WEEK 4, TOPIC 2 — Binary Search Trees (BST)
   // ============================================================
   "w4t2": {
+    takeaways: [
+      "A BST keeps left children smaller and right children larger than the parent.",
+      "Search, insert, and delete are O(log n) on average but O(n) if the tree is unbalanced.",
+      "In-order traversal of a BST gives you sorted output, just like ORDER BY.",
+      "Deleting a node with two children requires finding the in-order successor.",
+      "Sorted input creates a lopsided BST; balanced trees (AVL, Red-Black) fix this."
+    ],
     sections: [
       {
         title: "What Is a Binary Search Tree?",
@@ -166,6 +173,13 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
   // WEEK 4, TOPIC 3 — Heaps & Priority Queues
   // ============================================================
   "w4t3": {
+    takeaways: [
+      "A heap always keeps the min (or max) element at the root, accessible in O(1).",
+      "Heaps are stored as flat arrays; parent-child relationships use simple index math.",
+      "Insert bubbles up, extract-min bubbles down, both O(log n).",
+      "Use heaps for top-K problems, merge-K-sorted-lists, and Dijkstra's algorithm.",
+      "A heap is NOT fully sorted; it only guarantees the root is the extreme value."
+    ],
     sections: [
       {
         title: "What Is a Heap?",
@@ -304,6 +318,13 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
   // WEEK 4, TOPIC 4 — Graphs: Representation
   // ============================================================
   "w4t4": {
+    takeaways: [
+      "A graph is nodes plus edges; social networks, maps, and databases are all graphs.",
+      "Adjacency lists are best for sparse graphs; adjacency matrices for dense graphs.",
+      "Undirected edges go both ways; directed edges go one way only.",
+      "Build graphs from edge lists by looping through pairs and populating neighbor arrays.",
+      "A DAG (directed acyclic graph) models task dependencies, build systems, and pipelines."
+    ],
     sections: [
       {
         title: "What Is a Graph?",
@@ -458,6 +479,13 @@ console.log(buildGraph(edges));
   // WEEK 4, TOPIC 5 — Graph Traversal: BFS & DFS
   // ============================================================
   "w4t5": {
+    takeaways: [
+      "BFS uses a queue and explores level by level; DFS uses a stack and goes deep first.",
+      "BFS finds the shortest path in unweighted graphs; DFS is great for cycle detection.",
+      "Always mark nodes visited when you enqueue (BFS) to avoid duplicates.",
+      "Both BFS and DFS run in O(V + E) time, visiting every vertex and edge once.",
+      "Track parent pointers during BFS to reconstruct the shortest path."
+    ],
     sections: [
       {
         title: "Why Traverse a Graph?",
@@ -614,6 +642,13 @@ function dfsIterative(graph, start) {
   // WEEK 5, TOPIC 1 — HTML & CSS Beyond Basics
   // ============================================================
   "w5t1": {
+    takeaways: [
+      "Use semantic HTML tags (header, nav, main, article) instead of div for everything.",
+      "Flexbox handles one-dimensional layout (row or column); Grid handles two dimensions.",
+      "Write mobile-first CSS: base styles for small screens, then min-width media queries for larger ones.",
+      "CSS custom properties (variables) let you change a value in one place and update everywhere.",
+      "Use content-based breakpoints, not device-specific ones."
+    ],
     sections: [
       {
         title: "Semantic HTML: Writing Meaningful Markup",
@@ -786,6 +821,13 @@ function dfsIterative(graph, start) {
   // WEEK 5, TOPIC 2 — JavaScript & the DOM
   // ============================================================
   "w5t2": {
+    takeaways: [
+      "The DOM is the browser's live tree of your HTML that JavaScript can read and modify.",
+      "Use querySelector and querySelectorAll to find elements, like SQL WHERE clauses.",
+      "Never use innerHTML with user input; it creates XSS vulnerabilities. Use textContent instead.",
+      "Event delegation (one listener on a parent) handles dynamic elements and saves memory.",
+      "Use classList.add/remove/toggle to change styles instead of modifying style properties directly."
+    ],
     sections: [
       {
         title: "What Is the DOM?",
@@ -946,6 +988,13 @@ document.querySelector('.todo-list').addEventListener('click', (e) => {
   // WEEK 5, TOPIC 3 — HTTP, APIs & REST
   // ============================================================
   "w5t3": {
+    takeaways: [
+      "HTTP methods map to CRUD: GET=read, POST=create, PUT/PATCH=update, DELETE=delete.",
+      "REST APIs use nouns in URLs (/api/users/42) and HTTP methods for the action.",
+      "Always check response.ok after fetch; HTTP errors don't throw by default in JavaScript.",
+      "Status codes: 2xx=success, 4xx=client error (your fault), 5xx=server error (their fault).",
+      "Use async/await with fetch for readable HTTP request code."
+    ],
     sections: [
       {
         title: "How the Web Talks: HTTP",
@@ -1064,6 +1113,13 @@ async function deleteUser(id) {
   // WEEK 5, TOPIC 4 — Git & Version Control
   // ============================================================
   "w5t4": {
+    takeaways: [
+      "Git has three zones: working directory, staging area, and repository.",
+      "Branches let you work on features in isolation; merge when ready.",
+      "Commit messages should describe what changed and why, not just 'fixed stuff'.",
+      "Use 'git revert' on shared branches, not 'git reset --hard', to undo changes safely.",
+      "The pull request workflow is: branch, commit, push, open PR, review, merge."
+    ],
     sections: [
       {
         title: "Why Version Control?",
@@ -1206,6 +1262,13 @@ git diff`,
   // WEEK 5, TOPIC 5 — Command Line & Dev Tools
   // ============================================================
   "w5t5": {
+    takeaways: [
+      "The pipe operator (|) chains commands; output of one becomes input to the next.",
+      "Use npm (JavaScript) or pip (Python) to install and manage third-party packages.",
+      "Browser DevTools Network tab shows every HTTP request; filter by XHR for API calls.",
+      "The command line lets you automate tasks that GUIs can't; learn it early.",
+      "grep searches file contents, find searches file names, and ls lists directory contents."
+    ],
     sections: [
       {
         title: "Why the Command Line?",
@@ -1331,6 +1394,13 @@ pip install -r requirements.txt`,
   // WEEK 6, TOPIC 1 — Node.js / Python Backend Basics
   // ============================================================
   "w6t1": {
+    takeaways: [
+      "A backend handles business logic and database queries; the frontend is what users see.",
+      "Express (Node.js) and Flask (Python) are lightweight frameworks for building REST APIs.",
+      "Middleware runs between request and response; always call next() or send a response.",
+      "Never hardcode secrets in source code; use environment variables and .env files.",
+      "Add .env to .gitignore so secrets never end up in your Git history."
+    ],
     sections: [
       {
         title: "What Is a Backend?",
@@ -1509,6 +1579,13 @@ const port = process.env.PORT || 3000;  // Fallback to 3000
   // WEEK 6, TOPIC 2 — SQL Mastery (Level Up)
   // ============================================================
   "w6t2": {
+    takeaways: [
+      "Window functions compute values across rows without collapsing them, unlike GROUP BY.",
+      "CTEs (WITH clauses) make complex queries readable by naming each step.",
+      "Composite indexes follow leftmost-prefix rule: (a, b) helps WHERE a=... but not WHERE b=... alone.",
+      "Use EXPLAIN ANALYZE to check if your query uses indexes or does a slow sequential scan.",
+      "Self joins compare rows within the same table; lateral joins run a subquery per row."
+    ],
     sections: [
       {
         title: "Window Functions — SQL Superpowers",
@@ -1671,6 +1748,13 @@ SELECT * FROM users WHERE email = 'alice@example.com';
   // WEEK 6, TOPIC 3 — Database Design & ORMs
   // ============================================================
   "w6t3": {
+    takeaways: [
+      "Normalization eliminates duplicate data by splitting it into related tables.",
+      "One-to-many uses a foreign key on the 'many' side; many-to-many needs a junction table.",
+      "ORMs let you write database queries in your programming language instead of raw SQL.",
+      "Watch out for the N+1 problem: use eager loading (include/join) to fetch related data in one query.",
+      "Use an ORM for CRUD, but drop to raw SQL for complex analytics or performance-critical queries."
+    ],
     sections: [
       {
         title: "Database Design: Normalization",
@@ -1835,6 +1919,14 @@ await prisma.user.delete({ where: { id: 1 } });`,
   // WEEK 6, TOPIC 4 — Authentication & Security
   // ============================================================
   "w6t4": {
+    takeaways: [
+      "Authentication verifies who you are; authorization controls what you can do.",
+      "Never store plain passwords; use bcrypt to hash them (it's intentionally slow).",
+      "JWTs are signed tokens that let users stay logged in without hitting the database each request.",
+      "Always use parameterized queries to prevent SQL injection, the #1 database vulnerability.",
+      "Use textContent instead of innerHTML to prevent XSS attacks from user input.",
+      "HTTPS, CORS, rate limiting, and security headers form layers of defense."
+    ],
     sections: [
       {
         title: "Authentication vs Authorization",
@@ -2014,6 +2106,13 @@ app.use('/api/', limiter);`,
   // WEEK 6, TOPIC 5 — Testing & Debugging
   // ============================================================
   "w6t5": {
+    takeaways: [
+      "Unit tests verify one function in isolation; integration tests verify parts working together.",
+      "TDD means write a failing test first, then code to pass it, then refactor.",
+      "Read the error message first when debugging; it usually tells you what went wrong and where.",
+      "Use console.log to check assumptions, debugger to pause execution, and try-catch for better error info.",
+      "Write a new test for every bug you fix so it never sneaks back in."
+    ],
     sections: [
       {
         title: "Why Write Tests?",
@@ -2215,6 +2314,13 @@ function isValidEmail(email) {
   // WEEK 7, TOPIC 1 — React Fundamentals
   // ============================================================
   "w7t1": {
+    takeaways: [
+      "React components are functions that return JSX describing what the UI should look like.",
+      "Props flow one way: parent to child, like function arguments.",
+      "State is data that changes over time; when state updates, React re-renders the component.",
+      "Always give list items a unique 'key' prop so React can efficiently track changes.",
+      "Use early returns and conditional rendering for loading, error, and empty states."
+    ],
     sections: [
       {
         title: "Why React?",
@@ -2398,6 +2504,13 @@ function Dashboard({ user, isLoading, error }) {
   // WEEK 7, TOPIC 2 — React Hooks & Effects
   // ============================================================
   "w7t2": {
+    takeaways: [
+      "useEffect runs side effects after render; always include a dependency array to control when it fires.",
+      "An empty dependency array [] means the effect runs once on mount only.",
+      "useRef stores values between renders without causing re-renders, and can reference DOM elements.",
+      "Custom hooks extract reusable stateful logic; name them useXxx for clarity.",
+      "useContext shares global state without passing props through every intermediate component."
+    ],
     sections: [
       {
         title: "What Are Hooks?",
@@ -2620,6 +2733,13 @@ function App() {
   // WEEK 7, TOPIC 3 — System Design Fundamentals
   // ============================================================
   "w7t3": {
+    takeaways: [
+      "Vertical scaling means a bigger server; horizontal scaling means more servers behind a load balancer.",
+      "Caching (Redis) is ~100x faster than a database query; use it for frequently accessed data.",
+      "Read replicas distribute read load; sharding splits data across multiple databases.",
+      "Memory is ~100x faster than SSD, and SSD is ~1000x faster than a network round trip.",
+      "Most real apps use horizontal scaling because vertical scaling has hard limits."
+    ],
     sections: [
       {
         title: "What Is System Design?",
@@ -2740,6 +2860,13 @@ async function updateUser(userId, data) {
   // WEEK 7, TOPIC 4 — System Design: Common Patterns
   // ============================================================
   "w7t4": {
+    takeaways: [
+      "Cursor-based pagination outperforms OFFSET for large datasets by jumping directly via index.",
+      "Message queues decouple services so they can fail, scale, and process independently.",
+      "Start with a monolith; split into microservices only when you actually need to scale parts independently.",
+      "CDNs cache static files on servers worldwide so users download from the nearest one.",
+      "System design interviews follow: clarify requirements, high-level design, detailed design, address bottlenecks."
+    ],
     sections: [
       {
         title: "API Design Patterns",
@@ -2869,6 +2996,13 @@ app.get('/api/posts', async (req, res) => {
   // WEEK 7, TOPIC 5 — TypeScript Basics
   // ============================================================
   "w7t5": {
+    takeaways: [
+      "TypeScript catches type mismatches at compile time, before your code ever runs.",
+      "Interfaces define object shapes, like CREATE TABLE defines row shapes in SQL.",
+      "Generics let you write one function that works with any type while staying type-safe.",
+      "Union types (\"admin\" | \"user\") act like SQL ENUMs, restricting values to a set.",
+      "TypeScript + React is the modern industry standard; type your props, state, and events."
+    ],
     sections: [
       {
         title: "Why TypeScript?",
@@ -3073,6 +3207,13 @@ function TodoApp() {
   // WEEK 8, TOPIC 1 — Dynamic Programming
   // ============================================================
   "w8t1": {
+    takeaways: [
+      "Dynamic programming solves problems with overlapping subproblems by caching results.",
+      "Top-down (memoization) adds caching to recursion; bottom-up (tabulation) fills a table iteratively.",
+      "Define what dp[i] represents first; the recurrence relation follows from that definition.",
+      "Many DP problems are disguised Fibonacci: climbing stairs, coin change, path counting.",
+      "After solving with a full table, check if you can optimize space to only the last few values."
+    ],
     sections: [
       {
         title: "What Is Dynamic Programming?",
@@ -3234,6 +3375,13 @@ function coinChange(coins, amount) {
   // WEEK 8, TOPIC 2 — Common Interview Patterns
   // ============================================================
   "w8t2": {
+    takeaways: [
+      "Two pointers on a sorted array find pairs in O(n) instead of O(n^2).",
+      "Sliding window maintains a range that expands and contracts for subarray/substring problems.",
+      "Hash maps trade space for time, turning O(n^2) brute force into O(n) lookups.",
+      "Binary search works on any search space that can be halved, not just sorted arrays.",
+      "In interviews: understand the problem, state brute force, then optimize before coding."
+    ],
     sections: [
       {
         title: "Two Pointers",
@@ -3452,6 +3600,13 @@ function minCapacity(weights, days) {
   // WEEK 8, TOPIC 3 — Build a Full-Stack Project
   // ============================================================
   "w8t3": {
+    takeaways: [
+      "Start every full-stack project with the database schema; everything else builds on the data model.",
+      "Separate frontend (React), backend (Express/Flask), and database into clear layers.",
+      "Always validate input on the backend; frontend validation is just for user experience.",
+      "A deployed project is worth ten times more than a local one on your resume.",
+      "Test your deployed app: hardcoded localhost URLs and missing env vars break production."
+    ],
     sections: [
       {
         title: "Why Build a Project?",
@@ -3701,6 +3856,13 @@ function TaskList() {
   // WEEK 8, TOPIC 4 — Resume & GitHub Profile
   // ============================================================
   "w8t4": {
+    takeaways: [
+      "Keep your resume to one page; recruiters spend about 7 seconds scanning it.",
+      "Resume bullet formula: Action Verb + What You Built + Technology + Impact.",
+      "Pin your best 4-6 repos on GitHub; every pinned repo needs a clear README.",
+      "A good README has: what it does, how to run it, a screenshot, and the tech stack.",
+      "Only list skills you can discuss in an interview; never rate them with stars or percentages."
+    ],
     sections: [
       {
         title: "The SWE Resume Format",
@@ -3818,6 +3980,13 @@ function TaskList() {
   // WEEK 8, TOPIC 5 — Behavioral Interviews & Soft Skills
   // ============================================================
   "w8t5": {
+    takeaways: [
+      "Use the STAR method (Situation, Task, Action, Result) for every behavioral answer.",
+      "The Action section should be 60-70% of your answer; focus on what YOU specifically did.",
+      "Prepare 5-6 adaptable stories covering conflict, failure, leadership, challenge, and growth.",
+      "Think out loud during technical interviews; interviewers want to see your reasoning process.",
+      "Always have thoughtful questions ready for the interviewer; never say 'no questions'."
+    ],
     sections: [
       {
         title: "Why Behavioral Interviews Matter",
