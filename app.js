@@ -35,6 +35,23 @@ function getSectionsRead(topicId) {
   return STATE.sectionProgress[topicId] || [];
 }
 
+// ─── Merge all problem sets & add week tags to original problems ───
+const WEEK_MAP_FOR_ORIGINAL = {
+  "Arrays": 2, "Strings": 1, "Stacks": 2, "Hash Maps": 2,
+  "Sliding Window": 3, "Two Pointers": 3, "Binary Search": 3,
+  "Linked Lists": 2, "Graphs": 4, "Dynamic Programming": 8
+};
+PROBLEMS.forEach(p => {
+  if (!p.week) p.week = WEEK_MAP_FOR_ORIGINAL[p.topic] || 1;
+});
+
+const ALL_PROBLEMS = [
+  ...PROBLEMS,
+  ...(typeof PROBLEMS_1 !== 'undefined' ? PROBLEMS_1 : []),
+  ...(typeof PROBLEMS_2 !== 'undefined' ? PROBLEMS_2 : []),
+  ...(typeof PROBLEMS_3 !== 'undefined' ? PROBLEMS_3 : []),
+];
+
 // Initialize start date on first visit
 if (!STATE.startDate) {
   STATE.startDate = new Date().toISOString().split('T')[0];
@@ -215,11 +232,12 @@ function getFunctionName(code) {
 }
 
 // ─── Problem List ───
-function renderProblemList(filter = 'all', topicFilter = 'all') {
+function renderProblemList(filter = 'all', topicFilter = 'all', weekFilter = 'all') {
   const list = document.getElementById('problem-list');
-  const filtered = PROBLEMS.filter(p => {
+  const filtered = ALL_PROBLEMS.filter(p => {
     if (filter !== 'all' && p.difficulty !== filter) return false;
     if (topicFilter !== 'all' && p.topic !== topicFilter) return false;
+    if (weekFilter !== 'all' && String(p.week) !== String(weekFilter)) return false;
     return true;
   });
 
@@ -245,7 +263,7 @@ function renderProblemList(filter = 'all', topicFilter = 'all') {
 }
 
 function loadProblem(id) {
-  const problem = PROBLEMS.find(p => p.id === id);
+  const problem = ALL_PROBLEMS.find(p => p.id === id);
   if (!problem) return;
   currentProblem = problem;
 
@@ -289,22 +307,35 @@ window.showSolution = function() {
 };
 
 // Filter buttons
+function getFilters() {
+  const diff = document.querySelector('.filter-btn.active')?.dataset.difficulty || 'all';
+  const topic = document.getElementById('topic-filter').value;
+  const week = document.getElementById('week-filter').value;
+  return { diff, topic, week };
+}
+
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderProblemList(btn.dataset.difficulty, document.getElementById('topic-filter').value);
+    const f = getFilters();
+    renderProblemList(btn.dataset.difficulty, f.topic, f.week);
   });
 });
 
-document.getElementById('topic-filter').addEventListener('change', (e) => {
-  const activeBtn = document.querySelector('.filter-btn.active');
-  renderProblemList(activeBtn.dataset.difficulty, e.target.value);
+document.getElementById('topic-filter').addEventListener('change', () => {
+  const f = getFilters();
+  renderProblemList(f.diff, f.topic, f.week);
+});
+
+document.getElementById('week-filter').addEventListener('change', () => {
+  const f = getFilters();
+  renderProblemList(f.diff, f.topic, f.week);
 });
 
 // Populate topic filter
 (function populateTopicFilter() {
-  const topics = [...new Set(PROBLEMS.map(p => p.topic))];
+  const topics = [...new Set(ALL_PROBLEMS.map(p => p.topic))].sort();
   const select = document.getElementById('topic-filter');
   topics.forEach(t => {
     const opt = document.createElement('option');
@@ -540,6 +571,10 @@ function renderLessonSection() {
   const isLast = currentSectionIndex === total - 1;
   document.getElementById('lesson-next').classList.toggle('hidden', isLast);
   document.getElementById('lesson-complete').classList.toggle('hidden', !isLast);
+  // Show practice button on last section if there are problems for this week
+  const weekNum = lesson.topicId.match(/w(\d)/)?.[1] || '1';
+  const hasProblems = ALL_PROBLEMS.some(p => String(p.week) === weekNum);
+  document.getElementById('lesson-practice').classList.toggle('hidden', !isLast || !hasProblems);
 
   window.scrollTo(0, 0);
 }
@@ -576,6 +611,24 @@ document.getElementById('lesson-complete').addEventListener('click', () => {
   document.querySelector('[data-page="roadmap"]').click();
   renderRoadmap();
   updateDashboard();
+});
+
+// Practice Problems button — navigate to practice page filtered by week
+document.getElementById('lesson-practice').addEventListener('click', () => {
+  if (!currentLesson) return;
+  const weekNum = currentLesson.topicId.match(/w(\d)/)?.[1] || '1';
+  // Switch to practice page
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.dataset.page === 'practice');
+  });
+  pages.forEach(p => p.classList.toggle('active', p.id === 'page-practice'));
+  // Set week filter and render
+  document.getElementById('week-filter').value = weekNum;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.filter-btn[data-difficulty="all"]').classList.add('active');
+  document.getElementById('topic-filter').value = 'all';
+  renderProblemList('all', 'all', weekNum);
+  window.scrollTo(0, 0);
 });
 
 document.getElementById('lesson-back').addEventListener('click', () => {

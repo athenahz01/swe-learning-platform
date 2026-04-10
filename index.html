@@ -115,6 +115,20 @@
           </div>
         </div>
         <div class="filter-group">
+          <label>Week</label>
+          <select id="week-filter">
+            <option value="all">All Weeks</option>
+            <option value="1">Week 1: Foundations</option>
+            <option value="2">Week 2: Data Structures</option>
+            <option value="3">Week 3: Algorithms</option>
+            <option value="4">Week 4: Advanced DS</option>
+            <option value="5">Week 5: Web Dev</option>
+            <option value="6">Week 6: Backend</option>
+            <option value="7">Week 7: Frontend & Design</option>
+            <option value="8">Week 8: Interview Prep</option>
+          </select>
+        </div>
+        <div class="filter-group">
           <label>Topic</label>
           <select id="topic-filter">
             <option value="all">All Topics</option>
@@ -173,6 +187,7 @@
           <button class="btn btn-secondary" id="lesson-prev">&larr; Previous</button>
           <button class="btn btn-primary" id="lesson-next">Next Section &rarr;</button>
           <button class="btn btn-complete hidden" id="lesson-complete">Mark Complete &check;</button>
+          <button class="btn btn-practice hidden" id="lesson-practice">Practice Problems &rarr;</button>
         </div>
       </div>
     </div>
@@ -200,6 +215,9 @@
   <script src="data.js"></script>
   <script src="lessons.js"></script>
   <script src="lessons2.js"></script>
+  <script src="problems1.js"></script>
+  <script src="problems2.js"></script>
+  <script src="problems3.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
