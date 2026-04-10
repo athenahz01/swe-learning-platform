@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SWE Mastery — 60-Day Software Engineering Bootcamp</title>
+  <title>SWE Mastery — 2026 Software Engineering Bootcamp</title>
   <link rel="stylesheet" href="style.css">
   <!-- CodeMirror for code editor -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
@@ -11,12 +11,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
 </head>
 <body>
   <nav id="navbar">
     <div class="nav-brand">
-      <span class="logo">&#9889;</span> SWE Mastery
+      <span class="logo">&#9889;</span> SWE Mastery <span class="nav-year">2026</span>
     </div>
     <div class="nav-links">
       <a href="#" class="nav-link active" data-page="dashboard">Dashboard</a>
@@ -35,8 +36,14 @@
   <!-- ===================== DASHBOARD ===================== -->
   <main id="page-dashboard" class="page active">
     <header class="hero">
-      <h1>Your 60-Day SWE Journey</h1>
-      <p class="subtitle">From vibe-coder to job-ready software engineer. You already know SQL — let's build on that.</p>
+      <h1>Your 10-Week SWE Journey</h1>
+      <p class="subtitle">From vibe-coder to job-ready software engineer. Master Python, Java & JavaScript — the languages companies actually hire for in 2026.</p>
+      <div class="lang-badges">
+        <span class="lang-badge python-badge">🐍 Python (Primary)</span>
+        <span class="lang-badge java-badge">☕ Java</span>
+        <span class="lang-badge js-badge">⚡ JavaScript/TS</span>
+        <span class="lang-badge sql-badge">🗄️ SQL</span>
+      </div>
     </header>
 
     <section class="dashboard-grid">
@@ -50,7 +57,7 @@
       <div class="dash-card">
         <div class="dash-icon">&#9989;</div>
         <div class="dash-info">
-          <h3 id="topics-done">0 / 40</h3>
+          <h3 id="topics-done">0 / 50</h3>
           <p>Topics Completed</p>
         </div>
       </div>
@@ -88,8 +95,8 @@
   <!-- ===================== ROADMAP ===================== -->
   <main id="page-roadmap" class="page">
     <header class="page-header">
-      <h1>8-Week Learning Roadmap</h1>
-      <p class="subtitle">Click any topic to see details. Check off topics as you complete them.</p>
+      <h1>10-Week Learning Roadmap</h1>
+      <p class="subtitle">Restructured for 2026: DSA-heavy with Python first, Java & JS support, system design, and AI-era skills.</p>
     </header>
     <div id="roadmap-container" class="roadmap-container">
       <!-- Filled by JS -->
@@ -100,7 +107,7 @@
   <main id="page-practice" class="page">
     <header class="page-header">
       <h1>Practice Problems</h1>
-      <p class="subtitle">LeetCode-style challenges sorted by topic and difficulty</p>
+      <p class="subtitle">LeetCode-style challenges in Python, Java & JavaScript — sorted by topic and difficulty</p>
     </header>
 
     <div class="practice-layout">
@@ -118,14 +125,16 @@
           <label>Week</label>
           <select id="week-filter">
             <option value="all">All Weeks</option>
-            <option value="1">Week 1: Foundations</option>
-            <option value="2">Week 2: Data Structures</option>
-            <option value="3">Week 3: Algorithms</option>
+            <option value="1">Week 1: Python Foundations</option>
+            <option value="2">Week 2: Data Structures I</option>
+            <option value="3">Week 3: Algorithms I</option>
             <option value="4">Week 4: Advanced DS</option>
-            <option value="5">Week 5: Web Dev</option>
-            <option value="6">Week 6: Backend</option>
-            <option value="7">Week 7: Frontend & Design</option>
-            <option value="8">Week 8: Interview Prep</option>
+            <option value="5">Week 5: Algorithms II (DP & Graphs)</option>
+            <option value="6">Week 6: Java & OOP</option>
+            <option value="7">Week 7: Web Dev & APIs</option>
+            <option value="8">Week 8: Backend & Databases</option>
+            <option value="9">Week 9: System Design & TypeScript</option>
+            <option value="10">Week 10: Interview Prep</option>
           </select>
         </div>
         <div class="filter-group">
@@ -147,8 +156,9 @@
         <div class="editor-container">
           <div class="editor-toolbar">
             <select id="language-select">
+              <option value="python">Python 3</option>
+              <option value="java">Java</option>
               <option value="javascript">JavaScript</option>
-              <option value="python">Python</option>
             </select>
             <button id="run-btn" class="btn btn-run">&#9654; Run Code</button>
             <button id="submit-btn" class="btn btn-submit">Submit</button>
@@ -197,14 +207,14 @@
   <main id="page-resources" class="page">
     <header class="page-header">
       <h1>Curated Resources</h1>
-      <p class="subtitle">Free and high-quality learning materials for each phase</p>
+      <p class="subtitle">Free and high-quality learning materials for each phase — updated for 2026</p>
     </header>
     <div id="resources-container" class="resources-container">
       <!-- Filled by JS -->
     </div>
   </main>
 
-  <!-- Topic detail modal (kept for quick previews) -->
+  <!-- Topic detail modal -->
   <div id="modal-overlay" class="modal-overlay hidden">
     <div class="modal">
       <button class="modal-close" id="modal-close">&times;</button>

@@ -27,6 +27,8 @@ setVal("world")
 getVal()     // "world"`,
     starterJS: `function createState(initialValue) {\n  // Your code here\n\n}`,
     starterPY: `def create_state(initial_value):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [0], expected: 0 },
       { input: ["hello"], expected: "hello" },
@@ -80,6 +82,8 @@ New: { tag: "span", props: { class: "a" }, children: [] }
 Output: [{ type: "REPLACE", path: [], newNode: { tag: "span", props: { class: "a" }, children: [] } }]`,
     starterJS: `function diffTrees(oldTree, newTree) {\n  // Your code here\n\n}`,
     starterPY: `def diff_trees(old_tree, new_tree):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [
@@ -154,6 +158,8 @@ runEffect(() => {}, [])  // true (first call)
 runEffect(() => {}, [])  // false (empty deps never change)`,
     starterJS: `function createEffect() {\n  // Your code here\n\n}`,
     starterPY: `def create_effect():\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[[1, 2], [1, 2], [1, 3]]], expected: [true, false, true] },
       { input: [[[], []]], expected: [true, false] },
@@ -204,6 +210,8 @@ shortener.encode("https://b.com")  // "000002"
 shortener.decode("000001")  // "https://a.com"`,
     starterJS: `function createShortener() {\n  // Your code here\n\n}`,
     starterPY: `def create_shortener():\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [["https://example.com", "https://google.com"]], expected: ["000001", "000002", "https://example.com", "https://google.com"] },
       { input: [["https://a.com"]], expected: ["000001", "https://a.com"] },
@@ -254,6 +262,8 @@ ps.subscribe("a", () => {});
 ps.getSubscriberCount("a")  // 2`,
     starterJS: `function createPubSub() {\n  // Your code here\n\n}`,
     starterPY: `def create_pub_sub():\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [["subscribe:click", "subscribe:click", "count:click", "publish:click:hi", "unsubscribe:0", "count:click", "publish:click:hi"]], expected: [2, 2, 1, 1] },
       { input: [["count:x", "subscribe:x", "count:x"]], expected: [0, 1] },
@@ -301,6 +311,8 @@ obj = { name: "Alice", age: "thirty" }
 Output: { valid: false, errors: ["age: expected number but got string"] }`,
     starterJS: `function validateType(obj, schema) {\n  // Your code here\n\n}`,
     starterPY: `def validate_type(obj, schema):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [{ name: "Alice", age: 30 }, { name: "string", age: "number" }],
@@ -362,6 +374,8 @@ router.match("/posts/5/comments/10")
 // { handler: "getComment", params: { postId: "5", commentId: "10" } }`,
     starterJS: `function createRouter() {\n  // Your code here\n\n}`,
     starterPY: `def create_router():\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [["/users/:id", "getUser"], "/users/42"],
@@ -422,6 +436,8 @@ Output: 12
 Explanation: Rob house 0 ($2) + house 2 ($9) + house 4 ($1) = $12`,
     starterJS: `function rob(nums) {\n  // Your code here\n\n}`,
     starterPY: `def rob(nums):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, 1]], expected: 4 },
       { input: [[2, 7, 9, 3, 1]], expected: 12 },
@@ -474,6 +490,8 @@ Output: 0
 Explanation: No common subsequence exists.`,
     starterJS: `function longestCommonSubsequence(text1, text2) {\n  // Your code here\n\n}`,
     starterPY: `def longest_common_subsequence(text1, text2):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["abcde", "ace"], expected: 3 },
       { input: ["abc", "def"], expected: 0 },
@@ -525,6 +543,8 @@ Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
 Output: false`,
     starterJS: `function wordBreak(s, wordDict) {\n  // Your code here\n\n}`,
     starterPY: `def word_break(s, word_dict):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["leetcode", ["leet", "code"]], expected: true },
       { input: ["applepenapple", ["apple", "pen"]], expected: true },
@@ -577,6 +597,8 @@ Output: 3
 Explanation: "226" can be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).`,
     starterJS: `function numDecodings(s) {\n  // Your code here\n\n}`,
     starterPY: `def num_decodings(s):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["12"], expected: 2 },
       { input: ["226"], expected: 3 },
@@ -625,6 +647,8 @@ Input: arrays = [[1, 2], [3, 4], [0, 5]]
 Output: [0, 1, 2, 3, 4, 5]`,
     starterJS: `function mergeKSorted(arrays) {\n  // Your code here\n\n}`,
     starterPY: `def merge_k_sorted(arrays):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[[1, 4, 5], [1, 3, 4], [2, 6]]], expected: [1, 1, 2, 3, 4, 4, 5, 6] },
       { input: [[[1, 2], [3, 4], [0, 5]]], expected: [0, 1, 2, 3, 4, 5] },
@@ -673,6 +697,8 @@ Output: 6
 Explanation: No cooldown needed, just execute all 6 tasks.`,
     starterJS: `function leastInterval(tasks, n) {\n  // Your code here\n\n}`,
     starterPY: `def least_interval(tasks, n):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [["A","A","A","B","B","B"], 2], expected: 8 },
       { input: [["A","A","A","B","B","B"], 0], expected: 6 },
@@ -731,6 +757,8 @@ serialize -> "1,#,2"
 deserialize -> [1, null, 2]`,
     starterJS: `function serializeTree(root) {\n  // root is an array like [1, 2, 3, null, null, 4, 5]\n  // Return a string\n\n}\n\nfunction deserializeTree(str) {\n  // str is like "1,2,3,#,#,4,5"\n  // Return an array\n\n}`,
     starterPY: `def serialize_tree(root):\n    # root is a list like [1, 2, 3, None, None, 4, 5]\n    # Return a string\n    pass\n\ndef deserialize_tree(s):\n    # s is like "1,2,3,#,#,4,5"\n    # Return a list\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, null, null, 4, 5]], expected: [1, 2, 3, null, null, 4, 5] },
       { input: [[1, null, 2]], expected: [1, null, 2] },

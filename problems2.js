@@ -29,6 +29,8 @@ Output: 2`,
     # tree is a level-order array like [3, 9, 20, None, None, 15, 7]
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[3, 9, 20, null, null, 15, 7]], expected: 3 },
       { input: [[1, null, 2]], expected: 2 },
@@ -91,6 +93,8 @@ Output: [2, 3, 1]`,
     # tree is a level-order array
     # Return the inverted tree as a level-order array
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[4, 2, 7, 1, 3, 6, 9]], expected: [4, 7, 2, 9, 6, 3, 1] },
       { input: [[2, 1, 3]], expected: [2, 3, 1] },
@@ -183,6 +187,8 @@ Output: [[1], [2, 3], [4, 5]]`,
     # tree is a level-order array
     # Return list of lists grouped by level
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[3, 9, 20, null, null, 15, 7]], expected: [[3], [9, 20], [15, 7]] },
       { input: [[1, 2, 3, 4, 5]], expected: [[1], [2, 3], [4, 5]] },
@@ -256,6 +262,8 @@ Output: false (node 4 is in the right subtree of 5 but 3 < 5 violates BST)`,
     # tree is a level-order array
     # Return True if it's a valid BST, False otherwise
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[2, 1, 3]], expected: true },
       { input: [[5, 1, 4, null, null, 3, 6]], expected: false },
@@ -315,6 +323,8 @@ Output: 4`,
     starterPY: `def find_kth_largest(nums, k):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[3, 2, 1, 5, 6, 4], 2], expected: 5 },
       { input: [[3, 2, 3, 1, 2, 4, 5, 5, 6], 4], expected: 4 },
@@ -381,6 +391,8 @@ Output: false (nodes 0-2 and nodes 3-5 are in separate components)`,
     starterPY: `def valid_path(n, edges, source, destination):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [3, [[0,1],[1,2],[2,0]], 0, 2], expected: true },
       { input: [6, [[0,1],[0,2],[3,5],[5,4],[4,3]], 0, 5], expected: false },
@@ -455,6 +467,8 @@ Output: false (cycle: 0 requires 1, 1 requires 0)`,
     starterPY: `def can_finish(num_courses, prerequisites):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [2, [[1, 0]]], expected: true },
       { input: [2, [[1, 0], [0, 1]]], expected: false },
@@ -534,6 +548,8 @@ Output: { tag: ["js", "python"], page: "1" }`,
     starterPY: `def parse_query_string(url):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["https://example.com/search?q=hello&lang=en"], expected: { q: "hello", lang: "en" } },
       { input: ["https://example.com/search?tag=js&tag=python&page=1"], expected: { tag: ["js", "python"], page: "1" } },
@@ -609,6 +625,8 @@ Output: [1, [2, 3], { x: 4 }] (a completely independent copy)`,
     starterPY: `def deep_clone(obj):
     # Your code here — no json/copy module!
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [{ a: 1, b: { c: 2 } }], expected: { a: 1, b: { c: 2 } } },
       { input: [[1, [2, 3], { x: 4 }]], expected: [1, [2, 3], { x: 4 }] },
@@ -678,6 +696,8 @@ emitter.emit("double", 5); // returns []`,
     starterPY: `def create_emitter():
     # Return a dict with on, emit, off functions
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [["on", "greet", "name => 'Hello ' + name"], ["emit", "greet", "Alice"]], expected: ["Hello Alice"] },
       { input: [["on", "add", "(a, b) => a + b"], ["emit", "add", 3, 4]], expected: [7] },
@@ -746,6 +766,8 @@ Output: "ERROR: fail"`,
     # fns is a list of callables that return values or raise
     # Return list of results, or "ERROR: <message>" if any raises
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [["() => 1", "() => 2", "() => 3"]], expected: [1, 2, 3] },
       { input: [["() => 'a'", "() => { throw new Error('fail') }", "() => 'c'"]], expected: "ERROR: fail" },
@@ -810,6 +832,8 @@ Output: 15`,
     starterPY: `def debounce(fn):
     # Return a debounced function with a .flush() method
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["x => x * 2", [1, 2, 3]], expected: 6 },
       { input: ["x => x + 10", [5]], expected: 15 },
@@ -877,6 +901,8 @@ Output: { "user.name": "Alice", "user.address.city": "NYC" }`,
     starterPY: `def flatten_object(obj):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [{ a: { b: 1, c: { d: 2 } }, e: 3 }], expected: { "a.b": 1, "a.c.d": 2, "e": 3 } },
       { input: [{ user: { name: "Alice", address: { city: "NYC" } } }], expected: { "user.name": "Alice", "user.address.city": "NYC" } },
@@ -949,6 +975,8 @@ Output: [true, false, true]`,
     starterPY: `def rate_limiter(allowed, window, timestamps):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [3, 10, [1, 2, 3, 4, 11]], expected: [true, true, true, false, true] },
       { input: [1, 5, [1, 2, 6]], expected: [true, false, true] },
@@ -1020,6 +1048,8 @@ Output: ["200"]`,
     starterPY: `def kv_store(operations):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[["set","a","hello",10,1], ["get","a",5], ["get","a",12]]], expected: ["hello", -1] },
       { input: [[["set","x","100",5,0], ["set","x","200",5,3], ["get","x",6]]], expected: ["200"] },
@@ -1089,6 +1119,8 @@ Output: { a: [{x:1,y:"a"},{x:3,y:"a"}], b: [{x:2,y:"b"}] }`,
     starterPY: `def group_by(data, key):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [[{name:"Alice",dept:"eng"},{name:"Bob",dept:"eng"},{name:"Carol",dept:"sales"}], "dept"],
@@ -1162,6 +1194,8 @@ Output: [] (no matching keys)`,
     starterPY: `def inner_join(left, right, left_key, right_key):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [
@@ -1255,6 +1289,8 @@ Output: null`,
     starterPY: `def validate_jwt(token):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4ifQ.signature"], expected: { sub: "1234567890", name: "John" } },
       { input: ["not.a.valid.token"], expected: null },
@@ -1324,6 +1360,8 @@ Output: { logged: true } (pipeline stops at second middleware)`,
     starterPY: `def run_pipeline(middlewares, req):
     # Execute middlewares in order, return the final req dict
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [
@@ -1411,6 +1449,8 @@ Output: [true, 0, true, 1]`,
     starterPY: `def connection_pool(pool_size, operations):
     # Your code here
     pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       {
         input: [2, [["acquire","A"],["acquire","B"],["acquire","C"],["release","A"],["acquire","C"],["status"]]],

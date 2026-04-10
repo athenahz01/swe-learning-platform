@@ -39,7 +39,8 @@ function getSectionsRead(topicId) {
 const WEEK_MAP_FOR_ORIGINAL = {
   "Arrays": 2, "Strings": 1, "Stacks": 2, "Hash Maps": 2,
   "Sliding Window": 3, "Two Pointers": 3, "Binary Search": 3,
-  "Linked Lists": 2, "Graphs": 4, "Dynamic Programming": 8
+  "Linked Lists": 2, "Graphs": 4, "Trees": 4, "Heaps": 4,
+  "Dynamic Programming": 5
 };
 PROBLEMS.forEach(p => {
   if (!p.week) p.week = WEEK_MAP_FOR_ORIGINAL[p.topic] || 1;
@@ -96,22 +97,41 @@ let currentProblem = null;
 
 function initEditor() {
   editor = CodeMirror(document.getElementById('code-editor'), {
-    value: '// Select a problem to start coding\n',
-    mode: 'javascript',
+    value: '# Select a problem to start coding\n',
+    mode: 'python',
     theme: 'dracula',
     lineNumbers: true,
-    tabSize: 2,
+    tabSize: 4,
     lineWrapping: true,
     matchBrackets: true,
     autoCloseBrackets: true,
   });
 }
 
+function getEditorMode(lang) {
+  if (lang === 'python') return 'python';
+  if (lang === 'java') return 'text/x-java';
+  return 'javascript';
+}
+
+function getStarter(problem, lang) {
+  if (lang === 'python') return problem.starterPY || '';
+  if (lang === 'java') return problem.starterJava || problem.starterJS || '';
+  return problem.starterJS || '';
+}
+
+function getSolutionForLang(problem, lang) {
+  if (lang === 'python') return problem.solution || '';
+  if (lang === 'java') return problem.solutionJava || problem.solution || '';
+  return problem.solutionJS || problem.solution || '';
+}
+
 document.getElementById('language-select').addEventListener('change', (e) => {
   const lang = e.target.value;
-  editor.setOption('mode', lang === 'python' ? 'python' : 'javascript');
+  editor.setOption('mode', getEditorMode(lang));
+  editor.setOption('tabSize', lang === 'python' ? 4 : 2);
   if (currentProblem) {
-    editor.setValue(lang === 'python' ? currentProblem.starterPY : currentProblem.starterJS);
+    editor.setValue(getStarter(currentProblem, lang));
   }
 });
 
@@ -131,8 +151,9 @@ function runCode(isSubmit) {
   const output = document.getElementById('output');
   const lang = document.getElementById('language-select').value;
 
-  if (lang === 'python') {
-    output.innerHTML = '<span class="output-info">Python execution is simulated. For full Python support, use LeetCode or a local environment.\nShowing your code for review:</span>\n\n' + code;
+  if (lang === 'python' || lang === 'java') {
+    const langName = lang === 'python' ? 'Python' : 'Java';
+    output.innerHTML = `<span class="output-info">💡 ${langName} cannot be executed in the browser. For full ${langName} execution:\n\n  • Use LeetCode (leetcode.com) — select ${langName} from the dropdown\n  • Use a local IDE (VS Code, IntelliJ, PyCharm)\n  • Use an online IDE (replit.com, ideone.com)\n\nYour code for review:</span>\n\n<pre class="code-review">${escapeHtml(code)}</pre>`;
     return;
   }
 
@@ -282,7 +303,7 @@ function loadProblem(id) {
   `;
 
   const lang = document.getElementById('language-select').value;
-  editor.setValue(lang === 'python' ? problem.starterPY : problem.starterJS);
+  editor.setValue(getStarter(problem, lang));
   document.getElementById('output').innerHTML = '';
 
   // Highlight active problem
@@ -303,7 +324,9 @@ window.showWalkthrough = function() {
 
 window.showSolution = function() {
   if (!currentProblem) return;
-  document.getElementById('output').innerHTML = `<span class="output-solution">Solution:\n\n${currentProblem.solution}</span>`;
+  const lang = document.getElementById('language-select').value;
+  const solution = getSolutionForLang(currentProblem, lang);
+  document.getElementById('output').innerHTML = `<span class="output-solution">Solution (${lang === 'python' ? 'Python' : lang === 'java' ? 'Java' : 'JavaScript'}):\n\n${escapeHtml(solution)}</span>`;
 };
 
 // Filter buttons
@@ -572,7 +595,7 @@ function renderLessonSection() {
   document.getElementById('lesson-next').classList.toggle('hidden', isLast);
   document.getElementById('lesson-complete').classList.toggle('hidden', !isLast);
   // Show practice button on last section if there are problems for this week
-  const weekNum = lesson.topicId.match(/w(\d)/)?.[1] || '1';
+  const weekNum = lesson.topicId.match(/w(\d+)/)?.[1] || '1';
   const hasProblems = ALL_PROBLEMS.some(p => String(p.week) === weekNum);
   document.getElementById('lesson-practice').classList.toggle('hidden', !isLast || !hasProblems);
 
@@ -616,7 +639,7 @@ document.getElementById('lesson-complete').addEventListener('click', () => {
 // Practice Problems button — navigate to practice page filtered by week
 document.getElementById('lesson-practice').addEventListener('click', () => {
   if (!currentLesson) return;
-  const weekNum = currentLesson.topicId.match(/w(\d)/)?.[1] || '1';
+  const weekNum = currentLesson.topicId.match(/w(\d+)/)?.[1] || '1';
   // Switch to practice page
   navLinks.forEach(l => {
     l.classList.toggle('active', l.dataset.page === 'practice');
@@ -709,7 +732,7 @@ function updateDashboard() {
   const start = new Date(STATE.startDate);
   const now = new Date();
   const daysPassed = Math.floor((now - start) / 86400000);
-  const currentWeek = Math.min(8, Math.max(1, Math.ceil((daysPassed + 1) / 7)));
+  const currentWeek = Math.min(10, Math.max(1, Math.ceil((daysPassed + 1) / 7)));
   document.getElementById('current-week').textContent = `Week ${currentWeek}`;
 
   // Today's focus

@@ -22,6 +22,8 @@ Input: n = 15
 Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]`,
     starterJS: `function fizzBuzz(n) {\n  // Your code here\n\n}`,
     starterPY: `def fizz_buzz(n):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [3], expected: ["1","2","Fizz"] },
       { input: [5], expected: ["1","2","Fizz","4","Buzz"] },
@@ -71,6 +73,8 @@ Input: x = -456
 Output: -654`,
     starterJS: `function reverseInteger(x) {\n  // Your code here\n\n}`,
     starterPY: `def reverse_integer(x):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [123], expected: 321 },
       { input: [-456], expected: -654 },
@@ -126,6 +130,8 @@ Input: s = "AEIOU"
 Output: 5`,
     starterJS: `function countVowels(s) {\n  // Your code here\n\n}`,
     starterPY: `def count_vowels(s):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["hello world"], expected: 3 },
       { input: ["AEIOU"], expected: 5 },
@@ -172,6 +178,8 @@ Input: arr = [1, 2, 3, 4, 5, 6, 7, 8], n = 3
 Output: [[1, 2, 3], [4, 5, 6], [7, 8]]`,
     starterJS: `function chunkArray(arr, n) {\n  // Your code here\n\n}`,
     starterPY: `def chunk_array(arr, n):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, 4, 5], 2], expected: [[1, 2], [3, 4], [5]] },
       { input: [[1, 2, 3, 4, 5, 6, 7, 8], 3], expected: [[1, 2, 3], [4, 5, 6], [7, 8]] },
@@ -220,6 +228,8 @@ Input: arr = [[1, [2, 3]], [4], 5]
 Output: [1, [2, 3], 4, 5]`,
     starterJS: `function flattenOneLevel(arr) {\n  // Your code here\n\n}`,
     starterPY: `def flatten_one_level(arr):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[[1, 2], [3, 4], [5]]], expected: [1, 2, 3, 4, 5] },
       { input: [[[1, [2, 3]], [4], 5]], expected: [1, [2, 3], 4, 5] },
@@ -274,6 +284,8 @@ Input: timestamps = [0, 500, 1000, 1500], w = 1000
 Output: [2, 2]`,
     starterJS: `function countCalls(timestamps, w) {\n  // Your code here\n\n}`,
     starterPY: `def count_calls(timestamps, w):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[100, 200, 300, 1100, 1200, 2500], 1000], expected: [3, 2, 1] },
       { input: [[0, 500, 1000, 1500], 1000], expected: [2, 2] },
@@ -328,6 +340,8 @@ Input: s = "the quick brown fox"
 Output: "The Quick Brown Fox"`,
     starterJS: `function capitalizeWords(s) {\n  // Your code here\n\n}`,
     starterPY: `def capitalize_words(s):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["hello world"], expected: "Hello World" },
       { input: ["the quick brown fox"], expected: "The Quick Brown Fox" },
@@ -378,6 +392,8 @@ Input: nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
 Output: 5 (nums becomes [0, 1, 2, 3, 4, ...])`,
     starterJS: `function removeDuplicates(nums) {\n  // Your code here\n\n}`,
     starterPY: `def remove_duplicates(nums):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 1, 2]], expected: 2 },
       { input: [[0, 0, 1, 1, 1, 2, 2, 3, 3, 4]], expected: 5 },
@@ -440,6 +456,8 @@ Input: ops = [["push",3],["push",3],["getMax"],["pop"],["getMax"]]
 Output: [null,null,3,3,3]`,
     starterJS: `function maxStackOps(ops) {\n  // Your code here\n  // Process each operation and return array of results\n  // push returns null, pop returns the popped value\n  // top returns top value, getMax returns max value\n\n}`,
     starterPY: `def max_stack_ops(ops):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[["push",5],["push",1],["push",7],["getMax"],["pop"],["getMax"],["top"]]], expected: [null,null,null,7,7,5,1] },
       { input: [[["push",3],["push",3],["getMax"],["pop"],["getMax"]]], expected: [null,null,3,3,3] },
@@ -509,6 +527,8 @@ Input: ops = [["push",1],["push",2],["top"],["getMin"],["pop"],["getMin"]]
 Output: [null,null,2,1,2,1]`,
     starterJS: `function minStackOps(ops) {\n  // Your code here\n\n}`,
     starterPY: `def min_stack_ops(ops):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[["push",-2],["push",0],["push",-3],["getMin"],["pop"],["top"],["getMin"]]], expected: [null,null,null,-3,-3,0,-2] },
       { input: [[["push",1],["push",2],["top"],["getMin"],["pop"],["getMin"]]], expected: [null,null,2,1,2,1] },
@@ -575,6 +595,8 @@ Input: head = [1, 2]
 Output: [2, 1]`,
     starterJS: `function reverseList(arr) {\n  // Implement iterative linked list reversal\n  // Treat the array as a linked list\n\n}`,
     starterPY: `def reverse_list(arr):\n    # Implement iterative linked list reversal\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, 4, 5]], expected: [5, 4, 3, 2, 1] },
       { input: [[1, 2]], expected: [2, 1] },
@@ -647,6 +669,8 @@ Output: false
 Explanation: 0 -> 1 -> 2 -> end (no cycle)`,
     starterJS: `function hasCycle(nodes) {\n  // Your code here\n\n}`,
     starterPY: `def has_cycle(nodes):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 0]], expected: true },
       { input: [[1, 2, -1]], expected: false },
@@ -711,6 +735,8 @@ Output: -1
 Explanation: Every character repeats.`,
     starterJS: `function firstUniqChar(s) {\n  // Your code here\n\n}`,
     starterPY: `def first_uniq_char(s):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: ["leetcode"], expected: 0 },
       { input: ["loveleetcode"], expected: 2 },
@@ -769,6 +795,8 @@ Input: ops = [["enqueue",10],["enqueue",20],["dequeue"],["enqueue",30],["dequeue
 Output: [null,null,10,null,20,30]`,
     starterJS: `function queueOps(ops) {\n  // Your code here\n  // Use two arrays as stacks (push/pop only)\n\n}`,
     starterPY: `def queue_ops(ops):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[["enqueue",1],["enqueue",2],["peek"],["dequeue"],["dequeue"]]], expected: [null,null,1,1,2] },
       { input: [[["enqueue",10],["enqueue",20],["dequeue"],["enqueue",30],["dequeue"],["dequeue"]]], expected: [null,null,10,null,20,30] },
@@ -847,6 +875,8 @@ Output: 1
 Explanation: 2 would be inserted at index 1 (between 1 and 3).`,
     starterJS: `function searchInsert(nums, target) {\n  // Your code here\n\n}`,
     starterPY: `def search_insert(nums, target):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 3, 5, 6], 5], expected: 2 },
       { input: [[1, 3, 5, 6], 2], expected: 1 },
@@ -906,6 +936,8 @@ Input: nums = [1, 2, 1, 3, 5, 6, 4]
 Output: 5 (or 1, both are valid)`,
     starterJS: `function findPeakElement(nums) {\n  // Your code here\n\n}`,
     starterPY: `def find_peak_element(nums):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, 1]], expected: 2 },
       { input: [[1]], expected: 0 },
@@ -967,6 +999,8 @@ Input: arr = [5, 2, 8, 1]
 Output: [1, 2, 5, 8]`,
     starterJS: `function mergeSort(arr) {\n  // Your code here\n\n}`,
     starterPY: `def merge_sort(arr):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[38, 27, 43, 3, 9, 82, 10]], expected: [3, 9, 10, 27, 38, 43, 82] },
       { input: [[5, 2, 8, 1]], expected: [1, 2, 5, 8] },
@@ -1043,6 +1077,8 @@ Input: n = 10
 Output: 55`,
     starterJS: `function fibonacci(n) {\n  // Your code here\n  // Use memoization!\n\n}`,
     starterPY: `def fibonacci(n):\n    # Your code here\n    # Use memoization!\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [0], expected: 0 },
       { input: [1], expected: 1 },
@@ -1102,6 +1138,8 @@ Input: nums = [-1, 1, 0, -3, 3]
 Output: [0, 0, 9, 0, 0]`,
     starterJS: `function productExceptSelf(nums) {\n  // Your code here\n\n}`,
     starterPY: `def product_except_self(nums):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 2, 3, 4]], expected: [24, 12, 8, 6] },
       { input: [[-1, 1, 0, -3, 3]], expected: [0, 0, 9, 0, 0] },
@@ -1173,6 +1211,8 @@ Output: 2
 Explanation: [1,2] and [3].`,
     starterJS: `function subarraySum(nums, k) {\n  // Your code here\n\n}`,
     starterPY: `def subarray_sum(nums, k):\n    # Your code here\n    pass`,
+    starterJava: `// Java solution\nimport java.util.*;\n\nclass Solution {\n    // Your code here\n}`,
+
     testCases: [
       { input: [[1, 1, 1], 2], expected: 2 },
       { input: [[1, 2, 3], 3], expected: 2 },
