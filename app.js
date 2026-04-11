@@ -503,14 +503,41 @@ function renderLessonSection() {
   let html = `<h2>${section.title}</h2>`;
   html += section.content;
 
-  if (section.code) {
-    const lang = section.language || 'javascript';
-    html += `
-      <div class="lesson-code-block">
-        <div class="lesson-code-header"><span>${lang}</span></div>
-        <pre>${escapeHtml(section.code)}</pre>
-      </div>
-    `;
+  if (section.code || section.codePython) {
+    // Multi-language tab system
+    const languages = [];
+    if (section.codePython) languages.push({ id: 'python', label: 'Python', code: section.codePython });
+    if (section.code) {
+      const origLang = section.language || 'javascript';
+      // Don't duplicate if python code was already the main code
+      if (origLang !== 'python' || !section.codePython) {
+        languages.push({ id: origLang, label: origLang.charAt(0).toUpperCase() + origLang.slice(1), code: section.code });
+      }
+    }
+    if (section.codeJava) languages.push({ id: 'java', label: 'Java', code: section.codeJava });
+
+    if (languages.length === 1) {
+      // Single language — simple display
+      html += `
+        <div class="lesson-code-block">
+          <div class="lesson-code-header"><span>${languages[0].label}</span></div>
+          <pre>${escapeHtml(languages[0].code)}</pre>
+        </div>
+      `;
+    } else {
+      // Multi-language tabs
+      const tabId = 'code-tab-' + currentSectionIndex;
+      html += `
+        <div class="lesson-code-block multi-lang">
+          <div class="lesson-code-header">
+            <div class="code-lang-tabs">
+              ${languages.map((l, i) => `<button class="code-lang-tab ${i === 0 ? 'active' : ''}" data-tab="${tabId}" data-lang="${l.id}">${l.label}</button>`).join('')}
+            </div>
+          </div>
+          ${languages.map((l, i) => `<pre class="code-tab-content ${i === 0 ? 'active' : ''}" data-tab="${tabId}" data-lang="${l.id}">${escapeHtml(l.code)}</pre>`).join('')}
+        </div>
+      `;
+    }
   }
 
   if (section.diagram) {
@@ -569,6 +596,20 @@ function renderLessonSection() {
         if (parseInt(b.dataset.index) === correct) b.classList.add('correct');
         else if (b === btn && selected !== correct) b.classList.add('incorrect');
       });
+    });
+  });
+
+  // Wire up code language tab switching
+  content.querySelectorAll('.code-lang-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabGroup = tab.dataset.tab;
+      const lang = tab.dataset.lang;
+      // Deactivate all tabs and panes in this group
+      content.querySelectorAll(`.code-lang-tab[data-tab="${tabGroup}"]`).forEach(t => t.classList.remove('active'));
+      content.querySelectorAll(`.code-tab-content[data-tab="${tabGroup}"]`).forEach(p => p.classList.remove('active'));
+      // Activate selected
+      tab.classList.add('active');
+      content.querySelector(`.code-tab-content[data-tab="${tabGroup}"][data-lang="${lang}"]`)?.classList.add('active');
     });
   });
 

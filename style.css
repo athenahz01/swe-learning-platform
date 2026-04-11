@@ -1354,3 +1354,53 @@
     .python-badge { color: #5b9fd4; }
     .js-badge { color: #d4c830; }
   }
+  
+  /* ============================================
+     Code Language Tabs in Lessons
+     ============================================ */
+  
+  .lesson-code-block.multi-lang .lesson-code-header {
+    padding: 0;
+  }
+  
+  .code-lang-tabs {
+    display: flex;
+    gap: 0;
+  }
+  
+  .code-lang-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  
+  .code-lang-tab:hover {
+    color: rgba(255,255,255,0.8);
+  }
+  
+  .code-lang-tab.active {
+    color: #bd93f9;
+    border-bottom-color: #bd93f9;
+  }
+  
+  .code-tab-content {
+    display: none;
+  }
+  
+  .code-tab-content.active {
+    display: block;
+  }
+  
+  .lesson-code-block.multi-lang pre {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
