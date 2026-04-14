@@ -52,21 +52,10 @@ const LESSONS_2 = {
 <p><strong>Time complexity:</strong> O(log n) on average — each comparison eliminates half the tree. But if the tree is lopsided (like a linked list), it degrades to O(n). That's why databases use <em>balanced</em> trees (AVL, Red-Black, B-Trees).</p>
 <p>Compare this to SQL: <code>SELECT * FROM users WHERE id = 42</code> — the database doesn't scan every row. It walks the index tree, making the same left/right decisions.</p>`,
         codePython: `class BSTNode:
-  constructor(value):
-    this.value = value
-    this.left = None   # smaller values go here
-    this.right = None  # larger values go here
-
-def search(node, target):
-  # Base case: we fell off the tree (not found)
-  if (node == None) return None
-  # Found it!
-  if (target == node.value) return node
-  # Target is smaller — go left (just like binary search)
-  if (target < node.value) return search(node.left, target)
-  # Target is larger — go right
-  return search(node.right, target)
-`,
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None`,
         code: `class BSTNode {
   constructor(value) {
     this.value = value;
@@ -95,24 +84,13 @@ function search(node, target) {
         content: `<p>Insertion works the same way as search — walk down the tree until you find an empty spot, then attach the new node there.</p>
 <p>Think of it like filing a document in a cabinet: you follow the labels (left = smaller, right = bigger) until you find the right empty slot.</p>`,
         codePython: `def insert(node, value):
-  # If tree is empty, this new node becomes the root
-  if (node == None) return new BSTNode(value)
-  if (value < node.value):
-    # Go left — the new node belongs somewhere in the left subtree
-    node.left = insert(node.left, value)
-  } else if (value > node.value):
-    # Go right
-    node.right = insert(node.right, value)
-
-  # If value == node.value, it's a duplicate — we skip it
-
-  return node # return the (unchanged) current node
-
-# Build a BST from scratch:
-root = None
-for item in [8, 3, 10, 1, 6, 14, 4, 7, 13]):
-  root = insert(root, val)
-`,
+    if not node:
+        return BSTNode(value)
+    if value < node.value:
+        node.left = insert(node.left, value)
+    elif value > node.value:
+        node.right = insert(node.right, value)
+    return node`,
         code: `function insert(node, value) {
   // If tree is empty, this new node becomes the root
   if (node === null) return new BSTNode(value);
@@ -140,16 +118,15 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
       {
         title: "In-Order Traversal: Getting Sorted Output",
         content: `<p>One of the most powerful BST properties: an <strong>in-order traversal</strong> (left, root, right) visits nodes in <strong>sorted order</strong>. This is basically what happens when you run <code>SELECT * FROM table ORDER BY id</code> using an index.</p>`,
-        codePython: `def inOrder(node, result = []):
-  if (node == None) return result
-  inOrder(node.left, result)    # 1. Visit everything smaller
-  result.append(node.value)       # 2. Visit current node
-  inOrder(node.right, result)   # 3. Visit everything larger
-
-  return result
-
-# inOrder(root) => [1, 3, 4, 6, 7, 8, 10, 13, 14]
-# Sorted! Just like ORDER BY.`,
+        codePython: `def in_order(node, result=None):
+    if result is None:
+        result = []
+    if node:
+        in_order(node.left, result)
+        result.append(node.value)
+        in_order(node.right, result)
+    return result
+# Returns values in SORTED order — that's the BST magic!`,
         code: `function inOrder(node, result = []) {
   if (node === null) return result;
 
@@ -172,31 +149,26 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
   <li><strong>One child</strong>: Replace the node with its child. Like removing a middle manager — their direct report takes over.</li>
   <li><strong>Two children</strong>: Find the <em>in-order successor</em> (smallest node in the right subtree), copy its value up, then delete that successor node.</li>
 </ol>`,
-        codePython: `def deleteNode(node, value):
-  if (node == None) return None
-  if (value < node.value):
-    node.left = deleteNode(node.left, value)
-  } else if (value > node.value):
-    node.right = deleteNode(node.right, value)
-  } else:
-    # Found the node to delete!
-
-    # Case 1 & 2: zero or one child
-    if (node.left == None) return node.right
-    if (node.right == None) return node.left
-    # Case 3: two children
-    # Find the in-order successor (smallest in right subtree)
-    successor = node.right
-    while (successor.left != None):
-      successor = successor.left
-
-    # Copy successor's value here
-    node.value = successor.value
-    # Delete the successor from the right subtree
-    node.right = deleteNode(node.right, successor.value)
-
-  return node
-`,
+        codePython: `def delete_node(node, value):
+    if not node:
+        return None
+    if value < node.value:
+        node.left = delete_node(node.left, value)
+    elif value > node.value:
+        node.right = delete_node(node.right, value)
+    else:
+        # Found the node to delete
+        if not node.left:
+            return node.right
+        if not node.right:
+            return node.left
+        # Node has two children: find in-order successor
+        successor = node.right
+        while successor.left:
+            successor = successor.left
+        node.value = successor.value
+        node.right = delete_node(node.right, successor.value)
+    return node`,
         code: `function deleteNode(node, value) {
   if (node === null) return null;
 
@@ -292,24 +264,51 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
         content: `<p>To insert a new element: add it at the end of the array (bottom of the tree), then <strong>bubble it up</strong> — swap with its parent as long as it's smaller (for a min-heap).</p>
 <p>It's like a new employee who's really talented — they start at the bottom of the org chart but quickly get promoted up.</p>`,
         codePython: `class MinHeap:
-  constructor():
-    this.heap = []
+    def __init__(self):
+        self.heap = []
 
-  insert(value):
-    this.heap.append(value)       # Add at the end
-    this._bubbleUp(this.len(heap) - 1)
+    def push(self, val):
+        self.heap.append(val)
+        self._bubble_up(len(self.heap) - 1)
 
-  _bubbleUp(index):
-    while (index > 0):
-      parentIdx = Math.floor((index - 1) / 2)
-      # If parent is already smaller, heap property is satisfied
-      if (this.heap[parentIdx] <= this.heap[index]) break
-      # Swap with parent (child is smaller, so it should be higher)
-      [this.heap[parentIdx], this.heap[index]] =
-        [this.heap[index], this.heap[parentIdx]]
-      index = parentIdx # Move up and check again
+    def pop(self):
+        if not self.heap:
+            return None
+        self.heap[0], self.heap[-1] = self.heap[-1], self.heap[0]
+        val = self.heap.pop()
+        if self.heap:
+            self._bubble_down(0)
+        return val
 
-`,
+    def _bubble_up(self, i):
+        parent = (i - 1) // 2
+        while i > 0 and self.heap[i] < self.heap[parent]:
+            self.heap[i], self.heap[parent] = self.heap[parent], self.heap[i]
+            i = parent
+            parent = (i - 1) // 2
+
+    def _bubble_down(self, i):
+        n = len(self.heap)
+        while True:
+            smallest = i
+            left, right = 2 * i + 1, 2 * i + 2
+            if left < n and self.heap[left] < self.heap[smallest]:
+                smallest = left
+            if right < n and self.heap[right] < self.heap[smallest]:
+                smallest = right
+            if smallest == i:
+                break
+            self.heap[i], self.heap[smallest] = self.heap[smallest], self.heap[i]
+            i = smallest
+
+# In practice, use Python's heapq module:
+import heapq
+heap = []
+heapq.heappush(heap, 3)
+heapq.heappush(heap, 1)
+heapq.heappush(heap, 4)
+heapq.heappop(heap)    # returns 1 (smallest)
+# For max-heap, negate values: heappush(heap, -val)`,
         code: `class MinHeap {
   constructor() {
     this.heap = [];
@@ -341,40 +340,26 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
         title: "Extract Min: Bubble Down",
         content: `<p>To remove the minimum (the root): replace the root with the <em>last</em> element, then <strong>bubble it down</strong> — swap with the smaller child until the heap property is restored.</p>
 <p>It's like the CEO retires. You temporarily put the newest intern in the CEO chair, then they get demoted down the org chart until they find their level.</p>`,
-        codePython: `  # Inside MinHeap class:
+        codePython: `# Python heapq usage for Top K pattern:
+import heapq
 
-  extractMin():
-    if (this.len(heap) == 0) return None
-    if (this.len(heap) == 1) return this.heap.pop()
-    min = this.heap[0]                  # Save the minimum
-    this.heap[0] = this.heap.pop()            # Move last to root
-    this._bubbleDown(0)                       # Fix the heap
-    return min
+# Find K largest elements — O(n log k)
+def top_k_largest(nums, k):
+    return heapq.nlargest(k, nums)
 
-  _bubbleDown(index):
-    length = this.len(heap)
-    while (True):
-      smallest = index
-      left = 2 * index + 1
-      right = 2 * index + 2
-      # Check if left child is smaller
-      if (left < length and this.heap[left] < this.heap[smallest]):
-        smallest = left
+# Find K smallest elements
+def top_k_smallest(nums, k):
+    return heapq.nsmallest(k, nums)
 
-      # Check if right child is even smaller
-      if (right < length and this.heap[right] < this.heap[smallest]):
-        smallest = right
-
-      # If current is already the smallest, we're done
-      if (smallest == index) break
-      # Swap with the smaller child
-      [this.heap[smallest], this.heap[index]] =
-        [this.heap[index], this.heap[smallest]]
-      index = smallest
-
-  peek():
-    return this.heap[0] or None # O(1) — just look at the root
-`,
+# Kth largest element
+def kth_largest(nums, k):
+    # Use a min-heap of size k
+    heap = nums[:k]
+    heapq.heapify(heap)
+    for num in nums[k:]:
+        if num > heap[0]:
+            heapq.heapreplace(heap, num)
+    return heap[0]`,
         code: `  // Inside MinHeap class:
 
   extractMin() {
@@ -477,29 +462,21 @@ for (const val of [8, 3, 10, 1, 6, 14, 4, 7, 13]) {
         content: `<p>The most common way to store a graph in code is an <strong>adjacency list</strong>: for each node, keep a list of its neighbors.</p>
 <p><strong>SQL analogy:</strong> It's like having a <code>connections</code> table: <code>FROM_NODE | TO_NODE</code>. The adjacency list groups that data by <code>FROM_NODE</code>.</p>
 <p>Adjacency lists are memory-efficient for <em>sparse</em> graphs (few edges relative to nodes), which is most real-world graphs.</p>`,
-        codePython: `# Adjacency list using a Map (most flexible)
-graph = new Map()
-# Add nodes and their connections
-graph.set('A', ['B', 'C'])
-graph.set('B', ['A', 'D'])
-graph.set('C', ['A', 'D'])
-graph.set('D', ['B', 'C'])
-# "Who are A's neighbors?"
-print(graph.get('A')) # ['B', 'C']
+        codePython: `# Adjacency list using a dict (most common in Python)
+from collections import defaultdict
 
-# Using a plain object works too:
-graph2 =:
-  A: ['B', 'C'],
-  B: ['A', 'D'],
-  C: ['A', 'D'],
-  D: ['B', 'C']
+graph = defaultdict(list)
 
-# For weighted edges (like distances), store objects:
-weighted =:
-  A: [{ node: 'B', weight: 4 }, { node: 'C', weight: 2 }],
-  B: [{ node: 'A', weight: 4 }, { node: 'D', weight: 3 }],
-  # ...
-`,
+# Add edges
+graph["A"].append("B")
+graph["A"].append("C")
+graph["B"].append("D")
+graph["C"].append("D")
+
+# Weighted graph
+weighted = defaultdict(list)
+weighted["A"].append(("B", 5))    # (neighbor, weight)
+weighted["A"].append(("C", 3))`,
         code: `// Adjacency list using a Map (most flexible)
 const graph = new Map();
 
@@ -533,19 +510,6 @@ const weighted = {
         content: `<p>An <strong>adjacency matrix</strong> is a 2D grid where <code>matrix[i][j] = 1</code> means there's an edge from node i to node j.</p>
 <p><strong>SQL analogy:</strong> Think of a cross-tab / pivot table where both rows and columns are the same set of nodes.</p>
 <p>Matrices are great when the graph is <em>dense</em> (many edges) or when you need O(1) edge lookups. But they waste memory for sparse graphs.</p>`,
-        codePython: `# Adjacency matrix for 4 nodes: A=0, B=1, C=2, D=3
-#          A  B  C  D
-matrix = [
-  /* A */  [0, 1, 1, 0],  # A connects to B and C
-  /* B */  [1, 0, 0, 1],  # B connects to A and D
-  /* C */  [1, 0, 0, 1],  # C connects to A and D
-  /* D */  [0, 1, 1, 0],  # D connects to B and C
-]
-# "Is there an edge from A to B?"
-print(matrix[0][1]) # 1 = yes (O(1) lookup!)
-
-# "Is there an edge from A to D?"
-print(matrix[0][3]) # 0 = no`,
         code: `// Adjacency matrix for 4 nodes: A=0, B=1, C=2, D=3
 //          A  B  C  D
 const matrix = [
@@ -599,32 +563,6 @@ console.log(matrix[0][3]); // 0 = no`,
       {
         title: "Building Graphs from Edge Lists",
         content: `<p>Often you'll receive graph data as an edge list (like SQL rows). Here's how to convert it to an adjacency list:</p>`,
-        codePython: `# Edge list — like rows from a SQL table:
-# SELECT from_node, to_node FROM edges
-edges = [
-  ['A', 'B'],
-  ['A', 'C'],
-  ['B', 'D'],
-  ['C', 'D'],
-]
-# Build adjacency list for an UNDIRECTED graph
-def buildGraph(edges):
-  graph = {}
-  for item in edges):
-    # Initialize arrays if needed
-    if (!graph[from]) graph[from] = []
-    if (!graph[to]) graph[to] = []
-    # Undirected: add both directions
-    graph[from].append(to)
-    graph[to].append(from)
-
-  return graph
-
-# For a DIRECTED graph, only add one direction:
-# graph[from].append(to)  # no reverse edge
-
-print(buildGraph(edges))
-# { A: ['B','C'], B: ['A','D'], C: ['A','D'], D: ['B','C'] }`,
         code: `// Edge list — like rows from a SQL table:
 // SELECT from_node, to_node FROM edges;
 const edges = [
@@ -686,31 +624,24 @@ console.log(buildGraph(edges));
         title: "BFS — Level by Level",
         content: `<p>BFS explores in <strong>layers</strong>. First all nodes 1 step away, then 2 steps, then 3 steps. This means BFS naturally finds the <strong>shortest path</strong> in an unweighted graph.</p>
 <p><strong>Analogy:</strong> You're looking for your keys. BFS = search every room on floor 1 before going to floor 2. Methodical.</p>`,
-        codePython: `def bfs(graph, start):
-  visited = new Set()   # Track where we've been
-  queue = [start]       # FIFO queue — process oldest first
-  result = []           # Order we visit nodes
+        codePython: `# BFS — Breadth-First Search
+from collections import deque
 
-  visited.add(start)
-  while (len(queue) > 0):
-    node = queue.shift()     # Dequeue the oldest
-    result.append(node)
-    # Add all unvisited neighbors to the queue
-    for item in graph[node]):
-      if (!visited.has(neighbor)):
-        visited.add(neighbor)       # Mark visited IMMEDIATELY
-        queue.append(neighbor)        # Enqueue for later processing
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    visited.add(start)
+    result = []
 
-  return result
+    while queue:
+        node = queue.popleft()
+        result.append(node)
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
 
-graph =:
-  A: ['B', 'C'],
-  B: ['A', 'D', 'E'],
-  C: ['A', 'F'],
-  D: ['B'], E: ['B'], F: ['C']
-
-print(bfs(graph, 'A'))
-# ['A', 'B', 'C', 'D', 'E', 'F'] — level by level!`,
+    return result`,
         code: `function bfs(graph, start) {
   const visited = new Set();   // Track where we've been
   const queue = [start];       // FIFO queue — process oldest first
@@ -748,32 +679,26 @@ console.log(bfs(graph, 'A'));
       {
         title: "BFS — Shortest Path",
         content: `<p>To find the shortest path, track where each node was reached from:</p>`,
-        codePython: `def bfsShortestPath(graph, start, target):
-  visited = new Set([start])
-  queue = [start]
-  parent = { [start]: None }  # Track how we got to each node
+        codePython: `# BFS Shortest Path (unweighted graph)
+from collections import deque
 
-  while (len(queue) > 0):
-    node = queue.shift()
-    if (node == target):
-      # Reconstruct path by following parent pointers backward
-      path = []
-      current = target
-      while (current != None):
-        path.unshift(current)     # Add to front
-        current = parent[current] # Go to parent
+def bfs_shortest_path(graph, start, target):
+    if start == target:
+        return [start]
+    visited = {start}
+    queue = deque([(start, [start])])  # (node, path)
 
-      return path
+    while queue:
+        node, path = queue.popleft()
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                new_path = path + [neighbor]
+                if neighbor == target:
+                    return new_path
+                visited.add(neighbor)
+                queue.append((neighbor, new_path))
 
-    for item in graph[node]):
-      if (!visited.has(neighbor)):
-        visited.add(neighbor)
-        parent[neighbor] = node   # Remember: we got here FROM node
-        queue.append(neighbor)
-
-  return None # No path found
-
-# bfsShortestPath(graph, 'A', 'F') => ['A', 'C', 'F']`,
+    return None  # no path found`,
         code: `function bfsShortestPath(graph, start, target) {
   const visited = new Set([start]);
   const queue = [start];
@@ -812,35 +737,30 @@ console.log(bfs(graph, 'A'));
         content: `<p>DFS dives as deep as possible before backtracking. It's naturally recursive.</p>
 <p><strong>Analogy:</strong> You're looking for your keys. DFS = pick a room, open every drawer, check inside every box in each drawer. Finish one room completely before trying the next.</p>
 <p>DFS is great for: detecting cycles, topological sorting, finding connected components, and solving maze-like problems.</p>`,
-        codePython: `# Recursive DFS (most intuitive)
-function dfs(graph, node, visited = new Set()):
-  visited.add(node)
-  print(node)  # Process this node
-
-  for item in graph[node]):
-    if (!visited.has(neighbor)):
-      dfs(graph, neighbor, visited)  # Recurse deeper
-
-  return visited
-
-# Iterative DFS (uses an explicit stack instead of recursion)
-def dfsIterative(graph, start):
-  visited = new Set()
-  stack = [start]      # LIFO — process newest first
-  result = []
-  while (len(stack) > 0):
-    node = stack.pop()       # Pop the most recent
-
-    if (visited.has(node)) continue
+        codePython: `# Recursive DFS
+def dfs_recursive(graph, node, visited=None):
+    if visited is None:
+        visited = set()
     visited.add(node)
-    result.append(node)
-    # Push neighbors onto stack (they'll be processed depth-first)
-    for item in graph[node]):
-      if (!visited.has(neighbor)):
-        stack.append(neighbor)
+    print(node)
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs_recursive(graph, neighbor, visited)
 
-  return result
-`,
+# Iterative DFS (using explicit stack)
+def dfs_iterative(graph, start):
+    visited = set()
+    stack = [start]
+    result = []
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            result.append(node)
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+    return result`,
         code: `// Recursive DFS (most intuitive)
 function dfs(graph, node, visited = new Set()) {
   visited.add(node);
@@ -1113,22 +1033,6 @@ function dfsIterative(graph, start) {
       {
         title: "Selecting Elements",
         content: `<p>Before you can change something on the page, you need to <strong>find</strong> it. Think of these as SQL queries against the DOM.</p>`,
-        codePython: `# querySelector — like SELECT ... WHERE (returns first match)
-title = document.querySelector('h1')           # by tag
-btn = document.querySelector('.btn-primary')   # by class
-form = document.querySelector('#login-form')   # by ID
-link = document.querySelector('nav a.active')  # CSS selector
-
-# querySelectorAll — like SELECT ... (returns ALL matches)
-allCards = document.querySelectorAll('.card')
-# Returns a NodeList (array-like) — loop over it:
-allCards.forEach(lambda card: :
-  print(card.textContent)
-})
-# Older methods (still common in existing code):
-document.getElementById('login-form')       # by ID
-document.getElementsByClassName('card')     # by class (live collection)
-document.getElementsByTagName('p')          # by tag (live collection)`,
         code: `// querySelector — like SELECT ... WHERE (returns first match)
 const title = document.querySelector('h1');           // by tag
 const btn = document.querySelector('.btn-primary');   // by class
@@ -1151,28 +1055,6 @@ document.getElementsByTagName('p');          // by tag (live collection)`,
       {
         title: "Modifying Elements",
         content: `<p>Once you have an element, you can change its content, style, attributes — anything.</p>`,
-        codePython: `heading = document.querySelector('h1')
-# Change text content (safe — won't parse HTML)
-heading.textContent = 'Welcome, User!'
-# Change HTML content (careful — can cause XSS if using user input!)
-heading.innerHTML = 'Welcome, <em>User</em>!'
-# Change styles directly
-heading.style.color = '#3b82f6'
-heading.style.fontSize = '2rem'
-# Better: toggle CSS classes (keeps style in CSS where it belongs)
-heading.classList.add('highlighted')
-heading.classList.remove('hidden')
-heading.classList.toggle('active')    # add if missing, remove if present
-
-# Change attributes
-img = document.querySelector('img')
-img.setAttribute('src', '/new-image.png')
-img.setAttribute('alt', 'A cute cat')
-# Data attributes — store custom data on elements
-# <div data-user-id="42" data-role="admin">
-div = document.querySelector('[data-user-id]')
-print(div.dataset.userId)  # "42" (camelCase!)
-print(div.dataset.role)    # "admin"`,
         code: `const heading = document.querySelector('h1');
 
 // Change text content (safe — won't parse HTML)
@@ -1206,32 +1088,6 @@ console.log(div.dataset.role);    // "admin"`,
       {
         title: "Creating and Removing Elements",
         content: `<p>You can build new HTML elements entirely from JavaScript and insert them into the page.</p>`,
-        codePython: `# Create a new element
-card = document.createElement('div')
-card.classList.add('card')
-card.textContent = 'New card!'
-# Add it to the page
-document.querySelector('.card-container').appendChild(card)
-# Insert at a specific position
-container = document.querySelector('.list')
-newItem = document.createElement('li')
-newItem.textContent = 'Inserted item'
-thirdItem = container.children[2]
-container.insertBefore(newItem, thirdItem) # Insert BEFORE the 3rd item
-
-# Remove an element
-old = document.querySelector('.outdated')
-old.remove() # Modern way — just call .remove()
-
-# Build a list from data (common pattern)
-users = ['Alice', 'Bob', 'Charlie']
-ul = document.createElement('ul')
-users.forEach(lambda name: :
-  li = document.createElement('li')
-  li.textContent = name
-  ul.appendChild(li)
-})
-document.body.appendChild(ul)`,
         code: `// Create a new element
 const card = document.createElement('div');
 card.classList.add('card');
@@ -1266,35 +1122,6 @@ document.body.appendChild(ul);`,
         title: "Event Handling — Making Pages Interactive",
         content: `<p>Events are user actions: clicks, key presses, form submissions, scrolling. You attach <strong>event listeners</strong> to respond to them.</p>
 <p><strong>Analogy:</strong> Events are like database triggers in SQL — "when this happens, run this function."</p>`,
-        codePython: `# Basic click handler
-button = document.querySelector('#submit-btn')
-button.addEventListener('click', function(event):
-  print('Button clicked!')
-  print(event.target) # The element that was clicked
-})
-# Arrow function version
-button.addEventListener('click', (e) =>:
-  e.preventDefault() # Stop default behavior (e.g., form submission)
-  print('Handled!')
-})
-# Form submission
-form = document.querySelector('#login-form')
-form.addEventListener('submit', (e) =>:
-  e.preventDefault()  # Don't reload the page!
-
-  # Read form values
-  email = form.querySelector('#email').value
-  password = form.querySelector('#password').value
-  print('Login attempt:', email)
-})
-# Event delegation — handle clicks on MANY items with ONE listener
-# (Like putting a trigger on a parent table instead of each row)
-document.querySelector('.todo-list').addEventListener('click', (e) =>:
-  # Check what was actually clicked
-  if (e.target.classList.contains('delete-btn')):
-    e.target.closest('.todo-item').remove()
-
-})`,
         code: `// Basic click handler
 const button = document.querySelector('#submit-btn');
 button.addEventListener('click', function(event) {
@@ -1386,20 +1213,6 @@ document.querySelector('.todo-list').addEventListener('click', (e) => {
         title: "REST — Designing Clean APIs",
         content: `<p><strong>REST (Representational State Transfer)</strong> is a set of conventions for designing web APIs. Think of it as naming conventions for your API endpoints.</p>
 <p><strong>SQL analogy:</strong> If your database has tables, REST URLs map to those tables:</p>`,
-        codePython: `# REST URL patterns — notice how they mirror SQL tables:
-
-# GET    /api/users          -> SELECT * FROM users
-# GET    /api/users/42       -> SELECT * FROM users WHERE id = 42
-# POST   /api/users          -> INSERT INTO users ...
-# PUT    /api/users/42       -> UPDATE users SET ... WHERE id = 42
-# DELETE /api/users/42       -> DELETE FROM users WHERE id = 42
-
-# Nested resources (foreign key relationships):
-# GET    /api/users/42/posts -> SELECT * FROM posts WHERE user_id = 42
-
-# Query parameters = WHERE clauses:
-# GET    /api/users?role=admin&sort=name
-# -> SELECT * FROM users WHERE role = 'admin' ORDER BY name`,
         code: `// REST URL patterns — notice how they mirror SQL tables:
 
 // GET    /api/users          -> SELECT * FROM users
@@ -1906,32 +1719,6 @@ app.get('/api/profile', requireAuth, (req, res) => {
       {
         title: "Environment Variables — Keeping Secrets Safe",
         content: `<p>Never hardcode passwords, API keys, or database URLs in your source code. Use <strong>environment variables</strong> instead.</p>`,
-        codePython: `# .env file (NEVER commit this to Git!)
-# DATABASE_URL=postgres:#user:pass@localhost:5432/mydb
-# API_KEY=sk-abc123
-# PORT=3000
-
-# In Node.js (using dotenv package)
-require('dotenv').config()  # Load .env file
-
-dbUrl = process.env.DATABASE_URL
-apiKey = process.env.API_KEY
-port = process.env.PORT or 3000  # Fallback to 3000
-
-# In Python
-# import os
-# from dotenv import load_dotenv
-#
-# load_dotenv()  # Load .env file
-#
-# db_url = os.environ.get('DATABASE_URL')
-# api_key = os.environ.get('API_KEY')
-# port = int(os.environ.get('PORT', 3000))
-
-# .gitignore — ALWAYS include:
-# .env
-# node_modules/
-# __pycache__/`,
         code: `// .env file (NEVER commit this to Git!)
 // DATABASE_URL=postgres://user:pass@localhost:5432/mydb
 // API_KEY=sk-abc123
@@ -2241,45 +2028,6 @@ WHERE s.name = 'Alice';`,
       {
         title: "Prisma — A Modern ORM (Node.js)",
         content: `<p>Prisma uses a schema file to define your data models, then generates a type-safe client.</p>`,
-        codePython: `# prisma/schema.prisma — define your models
-# model User:
-#   id    Int     @id @default(autoincrement())
-#   email String  @unique
-#   name  String
-#   posts Post[]  # One-to-many relationship
-# }
-#
-# model Post:
-#   id       Int    @id @default(autoincrement())
-#   title    String
-#   content  String?
-#   author   User   @relation(fields: [authorId], references: [id])
-#   authorId Int
-# }
-
-# Using Prisma in your code:
-{ PrismaClient } = require('@prisma/client')
-prisma = new PrismaClient()
-# CREATE (INSERT INTO users ...)
-user = await prisma.user.create(:
-  data: { name: 'Alice', email: 'alice@example.com' }
-})
-# READ (SELECT * FROM users WHERE email = ...)
-found = await prisma.user.findUnique(:
-  where: { email: 'alice@example.com' }
-})
-# READ with relation (JOIN)
-userWithPosts = await prisma.user.findUnique(:
-  where: { id: 1 },
-  include: { posts: True }  # Automatically JOINs posts
-})
-# UPDATE
-await prisma.user.update(:
-  where: { id: 1 },
-  data: { name: 'Alice Smith' }
-})
-# DELETE
-await prisma.user.delete({ where: { id: 1 } })`,
         code: `// prisma/schema.prisma — define your models
 // model User {
 //   id    Int     @id @default(autoincrement())
@@ -2378,34 +2126,6 @@ await prisma.user.delete({ where: { id: 1 } });`,
         title: "Password Hashing — Never Store Plain Passwords",
         content: `<p>When a user creates an account, NEVER store their password as-is. Use a <strong>one-way hash function</strong> that converts the password into gibberish that can't be reversed.</p>
 <p><strong>Analogy:</strong> Hashing is like a meat grinder. You can turn beef into ground beef, but you can't turn ground beef back into a steak. To check if someone's password is correct, you grind their input and compare the result.</p>`,
-        codePython: `# Node.js: Using bcrypt for password hashing
-bcrypt = require('bcrypt')
-SALT_ROUNDS = 10 # Higher = slower = more secure
-
-# When user SIGNS UP:
-async def createUser(email, password):
-  # Hash the password (this takes ~100ms — intentionally slow!)
-  hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
-  # Store the HASH, never the original password
-  await db.query(
-    'INSERT INTO users (email, password_hash) VALUES ($1, $2)',
-    [email, hashedPassword]
-    # Stored: "$2b$10$N9qo8uLOickgx2ZMRZoMye..."  (gibberish)
-  )
-
-# When user LOGS IN:
-async def login(email, password):
-  user = await db.query(
-    'SELECT * FROM users WHERE email = $1', [email]
-  )
-  if (!user) return None # User not found
-
-  # Compare: hash the attempt and check against stored hash
-  isValid = await bcrypt.compare(password, user.password_hash)
-  if (!isValid) return None # Wrong password
-
-  return user # Success!
-`,
         code: `// Node.js: Using bcrypt for password hashing
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10; // Higher = slower = more secure
@@ -2443,43 +2163,6 @@ async function login(email, password) {
         title: "JWT — Token-Based Authentication",
         content: `<p>After login, you need a way to keep the user authenticated across requests. <strong>JWTs (JSON Web Tokens)</strong> are signed tokens that carry user info.</p>
 <p><strong>Analogy:</strong> A JWT is like a wristband at a music festival. After you show your ticket (login), you get a wristband (JWT). For the rest of the day, you just show the wristband — no need to re-show your ticket.</p>`,
-        codePython: `jwt = require('jsonwebtoken')
-SECRET = process.env.JWT_SECRET # Keep this secret!
-
-# After successful login, create a token:
-def generateToken(user):
-  payload =:
-    userId: user.id,
-    email: user.email,
-    role: user.role,     # For authorization later
-
-  # Sign the token — expires in 24 hours
-  return jwt.sign(payload, SECRET, { expiresIn: '24h' })
-
-# Login endpoint:
-app.post('/api/login', async (req, res) =>:
-  user = await login(req.body.email, req.body.password)
-  if (!user) return res.status(401).json({ error: 'Invalid credentials' })
-  token = generateToken(user)
-  res.json({ token })
-  # Client stores this token and sends it with every request
-})
-# Middleware to protect routes:
-def authenticate(req, res, next):
-  authHeader = req.headers.authorization
-  if (!authHeader) return res.status(401).json({ error: 'No token' })
-  token = authHeader.split(' ')[1] # "Bearer <token>"
-  try:
-    decoded = jwt.verify(token, SECRET)
-    req.user = decoded  # Attach user info to the request
-    next()
-  } catch (err):
-    return res.status(401).json({ error: 'Invalid token' })
-
-# Protected route:
-app.get('/api/profile', authenticate, (req, res) =>:
-  res.json({ userId: req.user.userId, email: req.user.email })
-})`,
         code: `const jwt = require('jsonwebtoken');
 const SECRET = process.env.JWT_SECRET; // Keep this secret!
 
@@ -2534,29 +2217,6 @@ app.get('/api/profile', authenticate, (req, res) => {
   <li><strong>XSS (Cross-Site Scripting)</strong>: Attacker injects JavaScript into your page. Defense: sanitize user input, use textContent instead of innerHTML.</li>
   <li><strong>CSRF (Cross-Site Request Forgery)</strong>: Attacker tricks a logged-in user into making unwanted requests. Defense: use CSRF tokens.</li>
 </ul>`,
-        codePython: `# SQL INJECTION — the #1 database vulnerability
-
-# BAD: String concatenation (attacker can inject SQL!)
-query = "SELECT * FROM users WHERE email = '" + userInput + "'"
-# If userInput = "'; DROP TABLE users; --"
-# Query becomes: SELECT * FROM users WHERE email = ''; DROP TABLE users; --'
-# YOUR TABLE IS GONE.
-
-# GOOD: Parameterized query (input is treated as DATA, not SQL)
-result = await db.query(
-  'SELECT * FROM users WHERE email = $1',
-  [userInput]  # This is always treated as a string value, never as SQL
-)
-# XSS — the #1 frontend vulnerability
-
-# BAD: Inserting user content as HTML
-element.innerHTML = userComment
-# If userComment = "<script>steal(document.cookie)</script>"
-# The script RUNS and steals cookies!
-
-# GOOD: Use textContent (treats input as text, not HTML)
-element.textContent = userComment
-# Displays the literal text, doesn't execute it`,
         code: `// SQL INJECTION — the #1 database vulnerability
 
 // BAD: String concatenation (attacker can inject SQL!)
@@ -2592,23 +2252,6 @@ element.textContent = userComment;
   <li><strong>Rate limiting</strong>: Prevent brute-force attacks by limiting requests per IP.</li>
   <li><strong>Helmet.js</strong>: Adds security headers to Express responses automatically.</li>
 </ul>`,
-        codePython: `helmet = require('helmet')
-rateLimit = require('express-rate-limit')
-cors = require('cors')
-# Security headers (protects against many common attacks)
-app.use(helmet())
-# CORS — only allow YOUR frontend to call the API
-app.use(cors(:
-  origin: 'https:#myapp.com',  # Only this domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}))
-# Rate limiting — max 100 requests per 15 minutes per IP
-limiter = rateLimit(:
-  windowMs: 15 * 60 * 1000,  # 15 minutes
-  max: 100,
-  message: 'Too many requests, please try again later.',
-})
-app.use('/api/', limiter)`,
         code: `const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
@@ -2670,42 +2313,6 @@ app.use('/api/', limiter);`,
       {
         title: "Unit Testing with Jest",
         content: `<p><strong>Jest</strong> is the most popular JavaScript testing framework. Here's how it works:</p>`,
-        codePython: `# math.js — the code we want to test
-def add(a, b):
-  return a + b
-
-def divide(a, b):
-  if (b == 0) throw new Error('Cannot divide by zero')
-  return a / b
-
-module.exports = { add, divide }
-# math.test.js — the test file (Jest finds files ending in .test.js)
-{ add, divide } = require('./math')
-# describe groups related tests together
-describe('add', () =>:
-  # test (or "it") defines a single test case
-  test('adds two positive numbers', () =>:
-    expect(add(2, 3)).toBe(5)     # toBe = strict equality
-  })
-  test('handles negative numbers', () =>:
-    expect(add(-1, -2)).toBe(-3)
-  })
-  test('handles zero', () =>:
-    expect(add(0, 5)).toBe(5)
-  })
-})
-describe('divide', () =>:
-  test('divides correctly', () =>:
-    expect(divide(10, 2)).toBe(5)
-  })
-  test('returns decimals', () =>:
-    expect(divide(1, 3)).toBeCloseTo(0.333, 2) # Floating point!
-  })
-  test('throws on divide by zero', () =>:
-    expect(() => divide(5, 0)).toThrow('Cannot divide by zero')
-  })
-})
-# Run tests: npx jest  (or: npm test)`,
         code: `// math.js — the code we want to test
 function add(a, b) {
   return a + b;
@@ -2757,40 +2364,6 @@ describe('divide', () => {
       {
         title: "Testing API Endpoints",
         content: `<p>Use <strong>supertest</strong> to test your Express routes without starting the server:</p>`,
-        codePython: `# app.test.js
-request = require('supertest')
-app = require('./app') # Your Express app (export it!)
-
-describe('GET /api/todos', () =>:
-  test('returns a list of todos', async () =>:
-    response = await request(app)
-      .get('/api/todos')
-      .expect(200)                              # Status code
-      .expect('Content-Type', /json/)          # Content type
-
-    expect(response.body).toBeInstanceOf(Array)
-    expect(response.len(body)).toBeGreaterThan(0)
-  })
-})
-describe('POST /api/todos', () =>:
-  test('creates a new todo', async () =>:
-    newTodo = { text: 'Write tests' }
-    response = await request(app)
-      .post('/api/todos')
-      .send(newTodo)             # Send JSON body
-      .expect(201)              # 201 Created
-
-    expect(response.body.text).toBe('Write tests')
-    expect(response.body.id).toBeDefined()
-    expect(response.body.done).toBe(False)
-  })
-  test('returns 400 for invalid input', async () =>:
-    await request(app)
-      .post('/api/todos')
-      .send({})                  # Missing required 'text'
-      .expect(400)
-  })
-})`,
         code: `// app.test.js
 const request = require('supertest');
 const app = require('./app'); // Your Express app (export it!)
@@ -2840,35 +2413,6 @@ describe('POST /api/todos', () => {
   <li><strong>Form a hypothesis.</strong> "I think the bug is because X." Then test that hypothesis.</li>
   <li><strong>Fix and verify.</strong> After fixing, run your tests. Write a NEW test that would have caught this bug.</li>
 </ol>`,
-        codePython: `# DEBUGGING TECHNIQUES:
-
-# 1. print — quick and dirty (but effective)
-def processOrder(order):
-  print('Processing order:', order)          # What's the input?
-  print('Order total:', order.len(items))  # Check assumptions
-  # ...
-
-# 2. console.table — great for arrays and objects
-console.table(users)  # Shows a formatted table in the console
-
-# 3. Debugger statement — pauses execution in DevTools
-def buggyFunction(data):
-  debugger  # Execution stops here when DevTools is open
-  # Step through code line by line, inspect variables
-  return data.map(lambda item: item.value)
-
-# 4. Try-catch for better error info
-async def fetchData():
-  try:
-    response = await fetch('/api/data')
-    json = await response.json()
-    return json
-  } catch (error):
-    console.error('Failed to fetch data:', error.message)
-    console.error('Stack trace:', error.stack)
-    throw error # Re-throw so callers know it failed
-
-`,
         code: `// DEBUGGING TECHNIQUES:
 
 // 1. console.log — quick and dirty (but effective)
@@ -2910,30 +2454,6 @@ async function fetchData() {
   <li><strong>GREEN</strong>: Write the minimum code to make the test pass.</li>
   <li><strong>REFACTOR</strong>: Clean up the code while keeping tests green.</li>
 </ol>`,
-        codePython: `# Example: TDD for an email validator
-
-# Step 1 (RED): Write failing tests first
-describe('isValidEmail', () =>:
-  test('accepts valid email', () =>:
-    expect(isValidEmail('user@example.com')).toBe(True)
-  })
-  test('rejects missing @', () =>:
-    expect(isValidEmail('userexample.com')).toBe(False)
-  })
-  test('rejects missing domain', () =>:
-    expect(isValidEmail('user@')).toBe(False)
-  })
-  test('rejects empty string', () =>:
-    expect(isValidEmail('')).toBe(False)
-  })
-})
-# Step 2 (GREEN): Write minimum code to pass
-def isValidEmail(email):
-  pattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/
-  return pattern.test(email)
-
-# Step 3 (REFACTOR): Clean up if needed
-# Tests stay green — confidence to refactor safely!`,
         code: `// Example: TDD for an email validator
 
 // Step 1 (RED): Write failing tests first
@@ -2996,36 +2516,6 @@ function isValidEmail(email) {
       {
         title: "Components — Building Blocks",
         content: `<p>React apps are built from <strong>components</strong> — reusable pieces of UI. A component is just a function that returns JSX (HTML-like syntax in JavaScript).</p>`,
-        codePython: `# A simple component — just a function that returns JSX
-def Greeting({ name }):
-  return <h1>Hello, {name}!</h1>
-
-# JSX lets you write HTML-like syntax in JavaScript.
-# The {name} part is a JavaScript expression — any valid JS goes in { }.
-
-# Components compose together like LEGO blocks:
-def UserCard({ user }):
-  return (
-    <div className="card">          {/* className, not class */}
-      <img src={user.avatar} alt={user.name} />
-      <h2>{user.name}</h2>
-      <p>{user.bio}</p>
-    </div>
-  )
-
-# Render a list of components (like looping over SQL results):
-def UserList({ users }):
-  return (
-    <div>
-      {users.map(lambda user: (
-        <UserCard
-          key={user.id}      # React needs a unique key for lists!
-          user={user}
-        />
-      ))}
-    </div>
-  )
-`,
         code: `// A simple component — just a function that returns JSX
 function Greeting({ name }) {
   return <h1>Hello, {name}!</h1>;
@@ -3065,36 +2555,6 @@ function UserList({ users }) {
         title: "Props — Passing Data Down",
         content: `<p><strong>Props</strong> are how you pass data from a parent component to a child. They flow <em>one direction</em>: parent to child, never the reverse.</p>
 <p><strong>Analogy:</strong> Props are like function arguments. When you call <code>calculateTotal(items, taxRate)</code>, the items and taxRate are "props" for that function.</p>`,
-        codePython: `# Parent passes data via props (like HTML attributes)
-def App():
-  return (
-    <div>
-      <Button label="Click Me" color="blue" onClick={handleClick} />
-      <Button label="Cancel" color="gray" onClick={handleCancel} />
-    </div>
-  )
-
-# Child receives props as a single object argument
-def Button({ label, color, onClick }):
-  return (
-    <button
-      style={{ backgroundColor: color }}
-      onClick={onClick}
-    >
-      {label}
-    </button>
-  )
-
-# Props can be anything: strings, numbers, arrays, objects, functions
-def Dashboard({ title, stats, onRefresh }):
-  return (
-    <section>
-      <h1>{title}</h1>
-      <p>Total Users: {stats.userCount}</p>
-      <button onClick={onRefresh}>Refresh</button>
-    </section>
-  )
-`,
         code: `// Parent passes data via props (like HTML attributes)
 function App() {
   return (
@@ -3133,47 +2593,6 @@ function Dashboard({ title, stats, onRefresh }) {
         title: "State — Making Components Interactive",
         content: `<p><strong>State</strong> is data that changes over time and affects what the component renders. When state changes, React re-renders the component automatically.</p>
 <p><strong>Analogy:</strong> If a component is a SQL query, state is like the WHERE clause parameters. Change the parameters, and the result (render) changes.</p>`,
-        codePython: `import { useState } from 'react'
-def Counter():
-  # useState returns: [currentValue, setterFunction]
-  [count, setCount] = useState(0) # 0 is the initial value
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      {/* When state changes, React re-renders this component */}
-      <button onClick={() => setCount(count + 1)}>+1</button>
-      <button onClick={() => setCount(count - 1)}>-1</button>
-      <button onClick={() => setCount(0)}>Reset</button>
-    </div>
-  )
-
-# A form with controlled inputs
-def LoginForm():
-  [email, setEmail] = useState('')
-  [password, setPassword] = useState('')
-  def handleSubmit(e):
-    e.preventDefault()
-    print('Login:', email, password)
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}                            # Controlled by state
-        onChange={(e) => setEmail(e.target.value)} # Update state on change
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Log In</button>
-    </form>
-  )
-`,
         code: `import { useState } from 'react';
 
 function Counter() {
@@ -3224,31 +2643,6 @@ function LoginForm() {
       {
         title: "Conditional Rendering",
         content: `<p>Components often need to show different things based on state — like a SQL <code>CASE WHEN</code>.</p>`,
-        codePython: `def StatusBadge({ status }):
-  # Ternary for simple either/or
-  return (
-    <span className={status == 'active' ? 'badge-green' : 'badge-gray'}>
-      {status}
-    </span>
-  )
-
-def Dashboard({ user, isLoading, error }):
-  # Early returns for different states
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p className="error">{error}</p>
-  if (!user) return <p>Please log in.</p>
-  # Happy path
-  return (
-    <div>
-      <h1>Welcome, {user.name}!</h1>
-      {/* Logical AND for conditional rendering */}
-      {user.isAdmin and <AdminPanel />}
-      {user.len(notifications) > 0 and (
-        <NotificationList items={user.notifications} />
-      )}
-    </div>
-  )
-`,
         code: `function StatusBadge({ status }) {
   // Ternary for simple either/or
   return (
@@ -3357,37 +2751,6 @@ function UserProfile({ userId }) {
       {
         title: "useRef — Persistent Values Without Re-render",
         content: `<p><strong>useRef</strong> gives you a mutable value that persists between renders but <em>doesn't trigger a re-render</em> when it changes. It's also used to reference DOM elements directly.</p>`,
-        codePython: `import { useRef, useEffect } from 'react'
-# Use case 1: Access a DOM element
-def AutoFocusInput():
-  inputRef = useRef(None)  # Create a ref
-
-  useEffect(() =>:
-    inputRef.current.focus()  # Access the actual DOM element
-  }, [])
-  return <input ref={inputRef} placeholder="I auto-focus!" />
-
-# Use case 2: Store a value without causing re-renders
-def StopWatch():
-  [seconds, setSeconds] = useState(0)
-  intervalRef = useRef(None) # Stores interval ID
-
-  def start():
-    intervalRef.current = setInterval(() =>:
-      setSeconds(lambda s: s + 1)
-    }, 1000)
-
-  def stop():
-    clearInterval(intervalRef.current) # Access the stored interval
-
-  return (
-    <div>
-      <p>{seconds}s</p>
-      <button onClick={start}>Start</button>
-      <button onClick={stop}>Stop</button>
-    </div>
-  )
-`,
         code: `import { useRef, useEffect } from 'react';
 
 // Use case 1: Access a DOM element
@@ -3481,53 +2844,6 @@ function ProductList() {
       {
         title: "useContext — Sharing State Globally",
         content: `<p>Sometimes multiple components deep in the tree need the same data (like current user, theme, language). Passing props through every intermediate component is tedious ("prop drilling"). <strong>Context</strong> lets you share data globally.</p>`,
-        codePython: `import { createContext, useContext, useState } from 'react'
-# 1. Create a Context
-AuthContext = createContext(None)
-# 2. Create a Provider component (wraps your app)
-def AuthProvider({ children }):
-  [user, setUser] = useState(None)
-  login = async (email, password) =>:
-    response = await fetch('/api/login',:
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    data = await response.json()
-    setUser(data.user)
-
-  logout = () => setUser(None)
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  )
-
-# 3. Use Context in ANY child component (no prop drilling!)
-def Navbar():
-  { user, logout } = useContext(AuthContext)
-  return (
-    <nav>
-      {user ? (
-        <>
-          <span>Hi, {user.name}</span>
-          <button onClick={logout}>Log Out</button>
-        </>
-      ) : (
-        <a href="/login">Log In</a>
-      )}
-    </nav>
-  )
-
-# 4. Wrap your app with the Provider
-def App():
-  return (
-    <AuthProvider>
-      <Navbar />
-      <MainContent />
-    </AuthProvider>
-  )
-`,
         code: `import { createContext, useContext, useState } from 'react';
 
 // 1. Create a Context
@@ -3746,34 +3062,6 @@ async function updateUser(userId, data) {
   <li><strong>Versioning</strong>: Allow breaking changes without breaking existing clients.</li>
   <li><strong>Idempotency</strong>: Making the same request twice should produce the same result (critical for payment systems).</li>
 </ul>`,
-        codePython: `# Pagination: Cursor-based (better than offset for large datasets)
-# GET /api/posts?cursor=abc123&limit=20
-
-app.get('/api/posts', async (req, res) =>:
-  limit = parseInt(req.query.limit) or 20
-  cursor = req.query.cursor
-  query = 'SELECT * FROM posts'
-  params = []
-  if (cursor):
-    # Cursor is typically the ID or timestamp of the last item seen
-    query += ' WHERE id > $1'
-    params.append(cursor)
-
-  query += ' ORDER BY id LIMIT $' + (len(params) + 1)
-  params.append(limit + 1) # Fetch one extra to check if there's more
-
-  posts = await db.query(query, params)
-  hasMore = len(posts) > limit
-  if (hasMore) posts.pop() # Remove the extra one
-
-  res.json(:
-    data: posts,
-    nextCursor: hasMore ? posts[len(posts) - 1].id : None,
-  })
-})
-# Why cursor > offset?
-# OFFSET 100000 still reads and discards 100K rows.
-# WHERE id > cursor jumps directly to the right spot using the index.`,
         code: `// Pagination: Cursor-based (better than offset for large datasets)
 // GET /api/posts?cursor=abc123&limit=20
 
@@ -4121,24 +3409,6 @@ function TodoApp() {
       {
         title: "Top-Down: Recursion + Memoization",
         content: `<p>The first DP approach: solve the problem recursively, but <strong>cache</strong> (memoize) results so you never compute the same thing twice.</p>`,
-        codePython: `# Classic example: Fibonacci numbers
-# fib(5) = fib(4) + fib(3)
-# fib(4) = fib(3) + fib(2)    <-- fib(3) is computed TWICE!
-
-# WITHOUT memoization: O(2^n) — exponentially slow
-def fibSlow(n):
-  if (n <= 1) return n
-  return fibSlow(n - 1) + fibSlow(n - 2) # Redundant work!
-
-# WITH memoization: O(n) — each subproblem computed ONCE
-def fib(n, memo = {}):
-  if (n <= 1) return n
-  if (memo[n] != None) return memo[n] # Already computed? Reuse!
-
-  memo[n] = fib(n - 1, memo) + fib(n - 2, memo)
-  return memo[n]
-
-# fib(50) = 12586269025  (runs instantly with memo, takes forever without)`,
         code: `// Classic example: Fibonacci numbers
 // fib(5) = fib(4) + fib(3)
 // fib(4) = fib(3) + fib(2)    <-- fib(3) is computed TWICE!
@@ -4183,27 +3453,31 @@ function fib(n, memo = {}) {
 <p><strong>SQL analogy:</strong> It's like building a summary table step by step. Each row depends on previous rows.</p>`,
         codePython: `# Bottom-up Fibonacci — no recursion needed
 def fib(n):
-  if (n <= 1) return n
-  # Build a table from small to large
-  dp = []
-  dp[0] = 0
-  dp[1] = 1
-  for (i = 2; i <= n; i++):
-    dp[i] = dp[i - 1] + dp[i - 2] # Use previously computed values
+    if n <= 1:
+        return n
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    for i in range(2, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
 
-  return dp[n]
+# Space-optimized (O(1) space):
+def fib_optimized(n):
+    if n <= 1:
+        return n
+    prev, curr = 0, 1
+    for _ in range(2, n + 1):
+        prev, curr = curr, prev + curr
+    return curr
 
-# Space optimization: you only need the last 2 values!
-def fibOptimal(n):
-  if (n <= 1) return n
-  prev2 = 0, prev1 = 1
-  for (i = 2; i <= n; i++):
-    current = prev1 + prev2
-    prev2 = prev1
-    prev1 = current
+# Top-down with memoization:
+from functools import lru_cache
 
-  return prev1
-`,
+@lru_cache(maxsize=None)
+def fib_memo(n):
+    if n <= 1:
+        return n
+    return fib_memo(n - 1) + fib_memo(n - 2)`,
         code: `// Bottom-up Fibonacci — no recursion needed
 function fib(n) {
   if (n <= 1) return n;
@@ -4237,25 +3511,29 @@ function fibOptimal(n) {
         title: "Classic DP: Climbing Stairs",
         content: `<p>You're climbing a staircase with <code>n</code> steps. Each time you can climb 1 or 2 steps. How many distinct ways can you reach the top?</p>
 <p>This is a disguised Fibonacci problem! To reach step n, you came from step n-1 (1 step) or step n-2 (2 steps).</p>`,
-        codePython: `# ways(n) = ways(n-1) + ways(n-2)
-# Base cases: ways(1) = 1, ways(2) = 2
+        codePython: `# Climbing Stairs: ways(n) = ways(n-1) + ways(n-2)
+def climb_stairs(n):
+    if n <= 2:
+        return n
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    dp[2] = 2
+    for i in range(3, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
 
-def climbStairs(n):
-  if (n <= 2) return n
-  dp = []
-  dp[1] = 1  # 1 step: only 1 way
-  dp[2] = 2  # 2 steps: (1+1) or (2) = 2 ways
-
-  for (i = 3; i <= n; i++):
-    dp[i] = dp[i - 1] + dp[i - 2]
-    # To reach step i: come from (i-1) with 1 step
-    #                  OR come from (i-2) with 2 steps
-
-  return dp[n]
-
-# climbStairs(5) = 8
-# The 8 ways: [1,1,1,1,1], [1,1,1,2], [1,1,2,1], [1,2,1,1],
-#             [2,1,1,1], [1,2,2], [2,1,2], [2,2,1]`,
+# House Robber: can't rob adjacent houses
+def rob(nums):
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+    dp = [0] * len(nums)
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+    for i in range(2, len(nums)):
+        dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+    return dp[-1]`,
         code: `// ways(n) = ways(n-1) + ways(n-2)
 // Base cases: ways(1) = 1, ways(2) = 2
 
@@ -4290,25 +3568,27 @@ function climbStairs(n) {
   <li><strong>Determine the order</strong>: Fill the table from small to large.</li>
   <li><strong>Optimize space</strong>: Do you really need the whole table, or just the last few values?</li>
 </ol>`,
-        codePython: `# Example: Coin Change Problem
-# Given coins [1, 5, 10, 25], find minimum coins to make 'amount'
-# Like: what's the fewest bills/coins to make change?
+        codePython: `# Coin Change — minimum coins to make amount
+def coin_change(coins, amount):
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if coin <= i and dp[i - coin] + 1 < dp[i]:
+                dp[i] = dp[i - coin] + 1
+    return dp[amount] if dp[amount] != float('inf') else -1
 
-def coinChange(coins, amount):
-  # dp[i] = minimum coins needed to make amount i
-  dp = [].fill(Infinity)
-  dp[0] = 0  # Base case: 0 coins needed to make $0
-
-  for (i = 1; i <= amount; i++):
-    for item in coins):
-      if (coin <= i and dp[i - coin] + 1 < dp[i]):
-        dp[i] = dp[i - coin] + 1
-        # "If I use this coin, I need 1 + (min coins for remainder)"
-
-  return dp[amount] == Infinity ? -1 : dp[amount]
-
-# coinChange([1, 5, 10, 25], 36)
-# dp[36] = 3 (25 + 10 + 1)`,
+# Word Break — can string be split into dictionary words?
+def word_break(s, word_dict):
+    dp = [False] * (len(s) + 1)
+    dp[0] = True
+    word_set = set(word_dict)
+    for i in range(1, len(s) + 1):
+        for j in range(i):
+            if dp[j] and s[j:i] in word_set:
+                dp[i] = True
+                break
+    return dp[len(s)]`,
         code: `// Example: Coin Change Problem
 // Given coins [1, 5, 10, 25], find minimum coins to make 'amount'
 // Like: what's the fewest bills/coins to make change?
@@ -4364,31 +3644,31 @@ function coinChange(coins, amount) {
         content: `<p>The <strong>Two Pointers</strong> technique uses two indices moving through an array, often from opposite ends. It's perfect for problems involving sorted arrays or finding pairs.</p>
 <p><strong>Analogy:</strong> Two people searching a bookshelf — one starts from the left, the other from the right. They move toward each other, skipping sections based on what they find.</p>`,
         codePython: `# Two Sum (sorted array) — find two numbers that add to target
-def twoSum(sorted, target):
-  left = 0
-  right = len(sorted) - 1
-  while (left < right):
-    sum = sorted[left] + sorted[right]
-    if (sum == target):
-      return [left, right]  # Found the pair!
-    } else if (sum < target):
-      left++   # Sum too small — need bigger numbers, move left pointer right
-    } else:
-      right--  # Sum too big — need smaller numbers, move right pointer left
+def two_sum_sorted(numbers, target):
+    left, right = 0, len(numbers) - 1
+    while left < right:
+        total = numbers[left] + numbers[right]
+        if total == target:
+            return [left, right]
+        elif total < target:
+            left += 1
+        else:
+            right -= 1
+    return []
 
-  return None # No pair found
-
-# twoSum([1, 3, 5, 7, 11], 12) => [0, 4] (1 + 11 = 12)
-
-# Reverse a string in-place with two pointers
-def reverseString(arr):
-  left = 0, right = len(arr) - 1
-  while (left < right):
-    [arr[left], arr[right]] = [arr[right], arr[left]] # Swap
-    left++
-    right--
-
-`,
+# Container With Most Water
+def max_area(height):
+    left, right = 0, len(height) - 1
+    max_water = 0
+    while left < right:
+        width = right - left
+        h = min(height[left], height[right])
+        max_water = max(max_water, width * h)
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return max_water`,
         code: `// Two Sum (sorted array) — find two numbers that add to target
 function twoSum(sorted, target) {
   let left = 0;
@@ -4425,40 +3705,47 @@ function reverseString(arr) {
         title: "Sliding Window",
         content: `<p>The <strong>Sliding Window</strong> technique maintains a "window" that slides across an array. Perfect for subarray/substring problems.</p>
 <p><strong>Analogy:</strong> Imagine sliding a magnifying glass across a sentence, always viewing exactly K characters at a time.</p>`,
-        codePython: `# Maximum sum of any subarray of size k
-def maxSubarraySum(arr, k):
-  # Initial window: sum of first k elements
-  windowSum = 0
-  for (i = 0; i < k; i++):
-    windowSum += arr[i]
+        codePython: `# Fixed window: maximum sum of subarray of size k
+def max_sum_k(arr, k):
+    window_sum = sum(arr[:k])
+    max_sum = window_sum
+    for i in range(k, len(arr)):
+        window_sum += arr[i] - arr[i - k]
+        max_sum = max(max_sum, window_sum)
+    return max_sum
 
-  maxSum = windowSum
-  # Slide the window: add the new element, remove the old one
-  for (i = k; i < len(arr); i++):
-    windowSum += arr[i]        # Add new element entering window
-    windowSum -= arr[i - k]    # Remove element leaving window
-    maxSum = Math.max(maxSum, windowSum)
+# Variable window: longest substring without repeating chars
+def length_of_longest_substring(s):
+    char_set = set()
+    left = max_len = 0
+    for right in range(len(s)):
+        while s[right] in char_set:
+            char_set.remove(s[left])
+            left += 1
+        char_set.add(s[right])
+        max_len = max(max_len, right - left + 1)
+    return max_len
 
-  return maxSum
-
-# maxSubarraySum([2, 1, 5, 1, 3, 2], 3) => 9 (5 + 1 + 3)
-
-# Longest substring without repeating characters
-def longestUnique(s):
-  seen = new Set()
-  left = 0, maxLen = 0
-  for (right = 0; right < len(s); right++):
-    # Shrink window from left while we have a duplicate
-    while (seen.has(s[right])):
-      seen.delete(s[left])
-      left++
-
-    seen.add(s[right])
-    maxLen = Math.max(maxLen, right - left + 1)
-
-  return maxLen
-
-# longestUnique("abcabcbb") => 3 ("abc")`,
+# Minimum window substring
+def min_window(s, t):
+    from collections import Counter
+    need = Counter(t)
+    missing = len(t)
+    left = start = 0
+    min_len = float('inf')
+    for right, char in enumerate(s):
+        if need[char] > 0:
+            missing -= 1
+        need[char] -= 1
+        while missing == 0:
+            if right - left + 1 < min_len:
+                min_len = right - left + 1
+                start = left
+            need[s[left]] += 1
+            if need[s[left]] > 0:
+                missing += 1
+            left += 1
+    return s[start:start + min_len] if min_len != float('inf') else "" `,
         code: `// Maximum sum of any subarray of size k
 function maxSubarraySum(arr, k) {
   // Initial window: sum of first k elements
@@ -4504,47 +3791,31 @@ function longestUnique(s) {
       {
         title: "Hash Map Patterns",
         content: `<p>Hash maps (objects/Maps in JS) provide O(1) lookup. They're used in a huge number of interview problems to trade space for time.</p>`,
-        codePython: `# Two Sum (unsorted) — the classic LeetCode #1
-def twoSum(nums, target):
-  seen = new Map() # value -> index
+        codePython: `# Two Sum — the classic LeetCode #1
+def two_sum(nums, target):
+    seen = {}    # value → index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
 
-  for (i = 0; i < len(nums); i++):
-    complement = target - nums[i]
-    if (seen.has(complement)):
-      return [seen.get(complement), i] # Found the pair!
+# Group Anagrams
+from collections import defaultdict
 
-    seen.set(nums[i], i) # Remember this number and its index
+def group_anagrams(strs):
+    groups = defaultdict(list)
+    for s in strs:
+        key = tuple(sorted(s))
+        groups[key].append(s)
+    return list(groups.values())
 
-  return None
+# Valid Anagram
+from collections import Counter
 
-# O(n) time, O(n) space — much better than O(n^2) brute force
-
-# Frequency counter — count occurrences
-def mostFrequent(arr):
-  freq = {}
-  for item in arr):
-    freq[item] = (freq[item] or 0) + 1
-
-  maxCount = 0, maxItem = None
-  for item in Object.entries(freq)):
-    if (count > maxCount):
-      maxCount = count
-      maxItem = item
-
-  return maxItem
-
-# Group anagrams: sort each word as a key
-def groupAnagrams(words):
-  groups = new Map()
-  for item in words):
-    key = word.split('').sort().join('') # "eat" -> "aet"
-    if (!groups.has(key)) groups.set(key, [])
-    groups.get(key).append(word)
-
-  return [...groups.values()]
-
-# groupAnagrams(["eat","tea","tan","ate","nat","bat"])
-# => [["eat","tea","ate"], ["tan","nat"], ["bat"]]`,
+def is_anagram(s, t):
+    return Counter(s) == Counter(t)`,
         code: `// Two Sum (unsorted) — the classic LeetCode #1
 function twoSum(nums, target) {
   const seen = new Map(); // value -> index
@@ -4597,46 +3868,36 @@ function groupAnagrams(words) {
         title: "Binary Search Variations",
         content: `<p>Binary search isn't just "find a number in a sorted array." It's a powerful template for any search space that can be divided in half.</p>`,
         codePython: `# Standard binary search
-def binarySearch(arr, target):
-  left = 0, right = len(arr) - 1
-  while (left <= right):
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target) return mid      # Found it
-    if (arr[mid] < target) left = mid + 1    # Search right half
-    else right = mid - 1                      # Search left half
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
 
-  return -1 # Not found
-
-# Find the first occurrence (leftmost) — useful for duplicates
-def firstOccurrence(arr, target):
-  left = 0, right = len(arr) - 1, result = -1
-  while (left <= right):
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target):
-      result = mid         # Found one, but keep searching left
-      right = mid - 1      # for an earlier occurrence
-    } else if (arr[mid] < target):
-      left = mid + 1
-    } else:
-      right = mid - 1
-
-  return result
-
-# Binary search on answer — "What's the minimum capacity?"
-# (Used when you're searching for an optimal value, not in an array)
-def minCapacity(weights, days):
-  left = Math.max(...weights)       # Min possible
-  right = weights.reduce((a, b) => a + b) # Max possible
-
-  while (left < right):
-    mid = Math.floor((left + right) / 2)
-    if (canShipInDays(weights, days, mid)):
-      right = mid       # Try a smaller capacity
-    } else:
-      left = mid + 1    # Need more capacity
-
-  return left
-`,
+# Search in rotated sorted array
+def search_rotated(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[left] <= nums[mid]:     # left half is sorted
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:                            # right half is sorted
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return -1`,
         code: `// Standard binary search
 function binarySearch(arr, target) {
   let left = 0, right = arr.length - 1;
@@ -4765,36 +4026,6 @@ function minCapacity(weights, days) {
       {
         title: "Step 1: Database Schema",
         content: `<p>Start with the data model. This is your foundation — everything else builds on it.</p>`,
-        codePython: `# prisma/schema.prisma
-# datasource db:
-#   provider = "postgresql"
-#   url      = env("DATABASE_URL")
-# }
-#
-# model User:
-#   id           Int      @id @default(autoincrement())
-#   email        String   @unique
-#   passwordHash String   @map("password_hash")
-#   createdAt    DateTime @default(now()) @map("created_at")
-#   tasks        Task[]
-#
-#   @@map("users")
-# }
-#
-# model Task:
-#   id        Int      @id @default(autoincrement())
-#   title     String
-#   done      Boolean  @default(False)
-#   priority  Int      @default(0)
-#   createdAt DateTime @default(now()) @map("created_at")
-#   user      User     @relation(fields: [userId], references: [id])
-#   userId    Int      @map("user_id")
-#
-#   @@map("tasks")
-# }
-
-# Run: npx prisma migrate dev --name init
-# This creates the SQL tables automatically!`,
         code: `// prisma/schema.prisma
 // datasource db {
 //   provider = "postgresql"
@@ -4830,58 +4061,6 @@ function minCapacity(weights, days) {
       {
         title: "Step 2: Backend API",
         content: `<p>Build RESTful endpoints. Each route handles one CRUD operation.</p>`,
-        codePython: `# routes/tasks.js
-express = require('express')
-router = express.Router()
-{ authenticate } = require('../middleware/auth')
-# All task routes require authentication
-router.use(authenticate)
-# GET /api/tasks — list user's tasks
-router.get('/', async (req, res) =>:
-  tasks = await prisma.task.findMany(:
-    where: { userId: req.user.id },
-    orderBy: { createdAt: 'desc' },
-  })
-  res.json(tasks)
-})
-# POST /api/tasks — create a task
-router.post('/', async (req, res) =>:
-  { title, priority } = req.body
-  if (!title or title.trim() == ''):
-    return res.status(400).json({ error: 'Title is required' })
-
-  task = await prisma.task.create(:
-    data::
-      title: title.trim(),
-      priority: priority or 0,
-      userId: req.user.id,  # From auth middleware
-    },
-  })
-  res.status(201).json(task)
-})
-# PATCH /api/tasks/:id — toggle done / update
-router.patch('/:id', async (req, res) =>:
-  # Verify the task belongs to this user
-  existing = await prisma.task.findFirst(:
-    where: { id: parseInt(req.params.id), userId: req.user.id },
-  })
-  if (!existing) return res.status(404).json({ error: 'Not found' })
-  updated = await prisma.task.update(:
-    where: { id: existing.id },
-    data: req.body,  # { done: True } or { title: "..." }
-  })
-  res.json(updated)
-})
-# DELETE /api/tasks/:id
-router.delete('/:id', async (req, res) =>:
-  existing = await prisma.task.findFirst(:
-    where: { id: parseInt(req.params.id), userId: req.user.id },
-  })
-  if (!existing) return res.status(404).json({ error: 'Not found' })
-  await prisma.task.delete({ where: { id: existing.id } })
-  res.status(204).send()
-})
-module.exports = router`,
         code: `// routes/tasks.js
 const express = require('express');
 const router = express.Router();
@@ -5077,25 +4256,6 @@ function TaskList() {
       {
         title: "Writing Project Bullets That Stand Out",
         content: `<p>The formula: <strong>Action Verb + What You Built + Technology + Impact/Scale</strong></p>`,
-        codePython: `# BAD bullets:
-# - "Made a task manager app"
-# - "Used React and Node.js"
-# - "Worked on database stuff"
-
-# GOOD bullets:
-# - "Built a full-stack task manager with React, Node.js, and
-#    PostgreSQL supporting user authentication and real-time updates"
-# - "Designed a normalized database schema with 4 tables and
-#    optimized queries using indexes, reducing load time by 60%"
-# - "Implemented JWT-based authentication with bcrypt password
-#    hashing and role-based access control for 3 user types"
-# - "Wrote 25+ unit and integration tests with Jest achieving
-#    90% code coverage across API endpoints"
-
-# Strong action verbs for SWE resumes:
-# Built, Designed, Implemented, Developed, Architected,
-# Optimized, Refactored, Deployed, Automated, Integrated,
-# Migrated, Reduced, Improved, Created, Engineered`,
         code: `// BAD bullets:
 // - "Made a task manager app"
 // - "Used React and Node.js"
@@ -5222,31 +4382,6 @@ function TaskList() {
   <li><strong>A</strong>ction: What did YOU specifically do? (This is the longest part.)</li>
   <li><strong>R</strong>esult: What happened? Quantify if possible.</li>
 </ul>`,
-        codePython: `# Example: "Tell me about a time you had to learn something new quickly."
-
-# SITUATION:
-# "During a hackathon, our team decided to build a real-time
-#  chat app, but none of us had used WebSockets before."
-
-# TASK:
-# "I took ownership of the backend real-time communication
-#  component since I was most comfortable with the server side."
-
-# ACTION:
-# "I spent the first 2 hours reading the Socket.io docs and
-#  building a minimal proof of concept. I created a simple
-#  echo server first, then added rooms and message persistence.
-#  I also documented the WebSocket events so my teammates
-#  could integrate with the frontend without confusion."
-
-# RESULT:
-# "We had a working real-time chat within 8 hours, and our
-#  project won 'Best Technical Implementation.' I continued
-#  learning about WebSockets and later used them in a
-#  personal project."
-
-# Key: The ACTION section should be 60-70% of your answer.
-# Be specific about what YOU did, not your team.`,
         code: `// Example: "Tell me about a time you had to learn something new quickly."
 
 // SITUATION:

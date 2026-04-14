@@ -66,12 +66,12 @@ def multiply(a, b):
     # 'a' and 'b' live on the stack
     result = a * b   # 'result' lives on the stack too
     return result
-    # When this function returns, a, b, and result are gone
+    # When this returns, a, b, and result are gone
 
-# Heap: objects and arrays are stored here
+# Heap: objects and dicts are stored here
 user = {"name": "Athena", "age": 20}
 # 'user' (the reference) is on the stack
-# {"name": "Athena", "age": 20} (the actual dict) is on the heap`,
+# {"name": "Athena", ...} (the actual dict) is on the heap`,
         code: `// Stack: each function call creates a stack frame
 function multiply(a, b) {
   // 'a' and 'b' live on the stack
@@ -140,11 +140,11 @@ let user = { name: "Athena", age: 20 };
 <li><strong>null</strong>: intentionally empty (like NULL in SQL!)</li>
 <li><strong>undefined</strong>: declared but never assigned (JS only — SQL doesn't have this)</li>
 </ul>`,
-        codePython: `# In Python, integers are immutable — same concept
+        codePython: `# Immutable types are stored by value
 a = 10
-b = a       # b gets a COPY of the value 10
-b = 20      # changing b doesn't affect a
-print(a)    # 10 — unchanged!
+b = a        # b gets a COPY of the value 10
+b = 20       # changing b doesn't affect a
+print(a)     # 10 — unchanged!
 
 # SQL analogy:
 # This is like: INSERT INTO table2 SELECT value FROM table1
@@ -163,20 +163,17 @@ console.log(a); // 10 — unchanged!
       {
         title: "Reference Types — Objects, Arrays, Functions",
         content: `<p>These are stored on the heap, and variables hold a <strong>reference</strong> (address) to them. This is the #1 source of bugs for beginners.</p>`,
-        codePython: `# Reference types — variables point to the SAME object
+        codePython: `# Mutable types — variables point to the SAME object
 arr1 = [1, 2, 3]
-arr2 = arr1          # arr2 points to the SAME list!
+arr2 = arr1           # arr2 points to the SAME list!
 arr2.append(4)
-print(arr1)          # [1, 2, 3, 4] — arr1 changed too!
-
-# This is like having two shortcuts to the same file.
-# Edit through either shortcut, and the file changes.
+print(arr1)           # [1, 2, 3, 4] — arr1 changed too!
 
 # To make a real copy:
-arr3 = arr1[:]       # slice copy
-arr4 = list(arr1)    # constructor copy
-arr5 = arr1.copy()   # .copy() method
-# For nested: import copy; arr6 = copy.deepcopy(arr1)`,
+arr3 = arr1[:]        # slice copy
+arr4 = list(arr1)     # constructor copy
+arr5 = arr1.copy()    # .copy() method
+# For nested: import copy; deep = copy.deepcopy(arr1)`,
         code: `// Reference types are stored by REFERENCE
 let arr1 = [1, 2, 3];
 let arr2 = arr1;        // arr2 points to the SAME array!
@@ -203,29 +200,29 @@ let arr4 = arr1.slice(); // also creates a copy`,
 <h3>The == vs === Rule</h3>
 <p><strong>Always use <code>===</code></strong> (strict equality). The <code>==</code> operator does type coercion, which creates bizarre results:</p>`,
         codePython: `# Python is much saner than JS here!
-# == checks value equality (with some type coercion)
+# == checks value equality
 # 'is' checks identity (same object in memory)
 
-5 == 5.0       # True (int vs float coercion)
-"5" == 5       # False! Python does NOT coerce str to int
-0 == False     # True (bool is subclass of int)
-"" == False    # False (no implicit coercion)
+5 == 5.0        # True (int vs float — Python coerces)
+"5" == 5        # False! Python does NOT coerce str to int
+0 == False      # True (bool is subclass of int)
+"" == False     # False (no implicit coercion)
 
-# The 'is' operator (identity, not equality):
+# 'is' checks object identity:
 a = [1, 2, 3]
 b = [1, 2, 3]
-a == b         # True  (same values)
-a is b         # False (different objects in memory)
+a == b          # True  (same values)
+a is b          # False (different objects in memory)
 
 # Falsy values in Python:
 # False, 0, 0.0, "", [], {}, set(), None
 # Truthy: everything else
 
-# In Python, empty list IS falsy (unlike JS!):
+# Key difference: empty list IS falsy in Python!
 if []:
-    print("truthy")  # does NOT print
+    print("truthy")   # does NOT print
 if "0":
-    print("truthy")  # prints! Non-empty string`,
+    print("truthy")   # prints — non-empty string`,
         code: `// == does type coercion (AVOID)
 "5" == 5       // true (string "5" is coerced to number 5)
 0 == false     // true (0 is "falsy")
@@ -253,18 +250,18 @@ if ("0") console.log("truthy!"); // prints! Non-empty string is truthy`,
 <p>This concept becomes critical when you learn React (state management) and functional programming.</p>`,
         codePython: `# Strings are IMMUTABLE in Python
 name = "hello"
-# name[0] = "H"       # TypeError! Python raises an error (unlike JS)
-print(name)            # "hello" — unchanged
-name = "Hello"         # rebinding to new string — this works
+# name[0] = "H"     # TypeError! Cannot modify in-place
+print(name)          # "hello" — unchanged
+name = "Hello"       # rebinding to a NEW string object
 
 # Lists are MUTABLE
 nums = [1, 2, 3]
-nums[0] = 99           # this works — lists can be modified
-print(nums)            # [99, 2, 3]
+nums[0] = 99         # works — lists can be modified
+print(nums)          # [99, 2, 3]
 
-# To create a new list without mutating the original:
-new_nums = nums + [4]  # concatenation creates a new list
-# or: new_nums = [*nums, 4]  # unpacking (like JS spread)`,
+# To create a new list without mutating:
+new_nums = nums + [4]       # concatenation
+new_nums = [*nums, 4]       # unpacking (like JS spread)`,
         code: `// Strings are IMMUTABLE
 let name = "hello";
 name[0] = "H";         // does nothing! (no error, just ignored)
@@ -301,29 +298,28 @@ const newNums = [...nums, 4];  // create new array instead of mutating
       {
         title: "Conditionals — Making Decisions in Code",
         content: `<p>In SQL, you filter with <code>WHERE</code>. In programming, you control flow with <code>if/else</code>. Same concept: "if this condition is true, do this thing."</p>`,
-        codePython: `# Basic if/elif/else
+        codePython: `# if / elif / else
 age = 20
 if age >= 21:
     print("Can drink")
 elif age >= 18:
-    print("Can vote")   # ← this runs
+    print("Can vote")    # ← this runs
 else:
     print("Too young")
 
 # Ternary (conditional expression)
 status = "adult" if age >= 18 else "minor"
-# SQL equivalent: CASE WHEN age >= 18 THEN 'adult' ELSE 'minor' END
+# SQL: CASE WHEN age >= 18 THEN 'adult' ELSE 'minor' END
 
 # match-case (Python 3.10+) — like switch
 day = "Monday"
 match day:
-    case "Monday" | "Tuesday":
+    case "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday":
         print("Weekday")
     case "Saturday" | "Sunday":
         print("Weekend")
     case _:
-        print("Midweek")
-`,
+        print("Unknown")`,
         code: `// Basic if/else
 let age = 20;
 if (age >= 21) {
@@ -390,31 +386,24 @@ for (let key in person) {
       {
         title: "Short-Circuit Evaluation & Early Returns",
         content: `<p>These are patterns that make your code cleaner and faster. Professional developers use them constantly.</p>`,
-        codePython: `# Short-circuit with and (AND)
+        codePython: `# Short-circuit with 'and'
 # If left side is falsy, right side never executes
 user = None
-user and print(user.name)  # safe! doesn't crash
+user and print(user.name)    # safe! doesn't crash
 
-# Short-circuit with or (OR)
+# Short-circuit with 'or'
 # Returns first truthy value
-name = inputName or "Anonymous"
-# If inputName is "", None, or None → use "Anonymous"
+name = input_name or "Anonymous"
 
-# Nullish coalescing ?? (better than ||)
-count = 0
-result1 = count or 10   # 10 (0 is falsy!)
-result2 = count ?? 10   # 0 (?? only checks None/None)
+# Practical: default values
+def greet(name=None):
+    name = name or "stranger"
+    print(f"Hello, {name}!")
 
-# Early returns — exit a function ASAP
-def processUser(user):
-  # Instead of wrapping everything in if (user) { ... }
-  if (!user) return None        # ← early return
-  if (!user.active) return None # ← early return
-
-  # Now we know user exists and is active
-  # Main logic goes here with no nesting
-  return user.name
-`,
+# Nullish check: use 'is not None' for explicit None check
+# (unlike JS ?? which only checks null/undefined)
+value = 0
+result = value if value is not None else "default"  # 0, not "default" `,
         code: `// Short-circuit with && (AND)
 // If left side is falsy, right side never executes
 let user = null;
@@ -495,15 +484,13 @@ sum(1, 2, 3, 4);  // 10`,
         codePython: `# PURE — same input, same output, no side effects
 def add(a, b):
     return a + b
-
-# add(2, 3) ALWAYS returns 5. Every time. Guaranteed.
+# add(2, 3) ALWAYS returns 5. Guaranteed.
 
 # IMPURE — depends on external state
 tax = 0.08
 def calculate_total(price):
-    return price * (1 + tax)  # depends on external 'tax'
-
-# If someone changes 'tax', this function's output changes too!
+    return price * (1 + tax)   # depends on external 'tax'
+# If someone changes 'tax', output changes too!
 
 # IMPURE — has side effects
 count = 0
@@ -511,12 +498,10 @@ def increment():
     global count
     count += 1    # modifies something outside the function
     return count
-
-# This returns different values each time you call it!
+# Returns different values each time!
 
 # SQL analogy: a pure function is like a VIEW with no
-# dependencies on session variables — always returns the
-# same result for the same input data.`,
+# session variable dependencies`,
         code: `// PURE — same input, same output, no side effects
 function add(a, b) {
   return a + b;
@@ -549,44 +534,38 @@ function increment() {
         content: `<p>A <strong>closure</strong> is when a function "remembers" variables from the scope where it was created, even after that scope is gone. This is one of the most asked interview topics.</p>`,
         codePython: `# A closure in action
 def create_counter():
-    count = 0  # this variable is "enclosed"
+    count = 0     # this variable is "enclosed"
 
     def counter():
-        nonlocal count   # needed to modify enclosed variable
+        nonlocal count    # needed to modify enclosed var
         count += 1
-        return count     # inner function still accesses count!
+        return count
 
     return counter
 
 counter = create_counter()
-print(counter())  # 1
-print(counter())  # 2
-print(counter())  # 3
+print(counter())   # 1
+print(counter())   # 2
+print(counter())   # 3
 # 'count' is private — no one can access it directly!
 
 # Practical use: creating private state
 def create_bank_account(initial_balance):
-    balance = initial_balance  # private!
+    balance = initial_balance
 
     def deposit(amount):
         nonlocal balance
         balance += amount
         return balance
 
-    def withdraw(amount):
-        nonlocal balance
-        balance -= amount
-        return balance
-
     def get_balance():
         return balance
 
-    return deposit, withdraw, get_balance
+    return deposit, get_balance
 
-deposit, withdraw, get_balance = create_bank_account(100)
-deposit(50)       # 150
-withdraw(20)      # 130
-get_balance()     # 130`,
+deposit, get_balance = create_bank_account(100)
+deposit(50)        # 150
+get_balance()      # 150`,
         code: `// A closure in action
 function createCounter() {
   let count = 0;  // this variable is "enclosed"
@@ -635,31 +614,23 @@ account.getBalance();    // 130
         title: "Higher-Order Functions — Functions That Use Functions",
         content: `<p>A <strong>higher-order function</strong> either takes a function as an argument OR returns a function. You've already used these — <code>map</code>, <code>filter</code>, and <code>reduce</code> are all higher-order functions.</p>`,
         codePython: `numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-# .map() — transform each element (like SELECT with expression)
-doubled = numbers.map(lambda n: n * 2)
-# [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
 
-# .filter() — keep elements that pass a test (like WHERE)
-evens = numbers.filter(lambda n: n % 2 == 0)
-# [2, 4, 6, 8, 10]
+# map: transform each element
+doubled = [n * 2 for n in numbers]        # [2, 4, 6, ...]
+# or: doubled = list(map(lambda n: n * 2, numbers))
 
-# .reduce() — combine all elements into one value (like SUM, COUNT)
-total = numbers.reduce((sum, n) => sum + n, 0)
-# 55
+# filter: keep elements that pass a test
+evens = [n for n in numbers if n % 2 == 0]  # [2, 4, 6, 8, 10]
+# or: evens = list(filter(lambda n: n % 2 == 0, numbers))
 
-# Chain them! (like chaining SQL clauses)
-result = numbers
-  .filter(lambda n: n % 2 == 0)    # WHERE n % 2 = 0
-  .map(lambda n: n * 3)              # SELECT n * 3
-  .reduce((sum, n) => sum + n, 0) # SUM()
-# (2+4+6+8+10) * 3 = 90
+# reduce: combine all elements into one value
+from functools import reduce
+total = reduce(lambda acc, n: acc + n, numbers, 0)  # 55
+# or simply: total = sum(numbers)
 
-# .find() — return first match (like LIMIT 1)
-firstBig = numbers.find(lambda n: n > 7)  # 8
-
-# .some() / .every() — boolean checks (like EXISTS / ALL)
-numbers.some(lambda n: n > 5)  # True (at least one > 5)
-numbers.every(lambda n: n > 5) # False (not all > 5)`,
+# Chaining: get sum of squares of even numbers
+result = sum(n**2 for n in numbers if n % 2 == 0)
+# SQL: SELECT SUM(n*n) FROM numbers WHERE n % 2 = 0`,
         code: `const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 // .map() — transform each element (like SELECT with expression)
@@ -737,32 +708,6 @@ let greeting = \`Hello, \${name}! You are \${20} years old.\`;`,
       {
         title: "Array Methods — Your Swiss Army Knife",
         content: `<p>Arrays are the most common data structure. Master these methods and you can solve most easy-level problems.</p>`,
-        codePython: `arr = [3, 1, 4, 1, 5, 9]
-# Adding/removing
-arr.append(2)         # add to END → [3,1,4,1,5,9,2]
-arr.pop()           # remove from END → returns 2
-arr.unshift(0)      # add to START → [0,3,1,4,1,5,9]
-arr.shift()         # remove from START → returns 0
-
-# splice — the multi-tool (MUTATES the array)
-arr.splice(2, 1)    # at index 2, remove 1 element
-arr.splice(1, 0, 99) # at index 1, remove 0, insert 99
-
-# Non-mutating methods (return new arrays)
-sorted = arr[:].sort((a, b) => a - b) # sort ascending
-reversed = arr[:].reverse()
-# Finding things
-arr.includes(5)         # True
-arr.indexOf(4)          # index of first 4
-arr.findIndex(lambda n: n > 4) # index of first element > 4
-
-# Checking
-len(arr)              # how many elements
-Array.isArray(arr)      # True (type(arr) is "object"!)
-
-# Destructuring — unpack arrays into variables
-[first, second, ...rest] = [10, 20, 30, 40, 50]
-# first = 10, second = 20, rest = [30, 40, 50]`,
         code: `let arr = [3, 1, 4, 1, 5, 9];
 
 // Adding/removing
@@ -798,34 +743,33 @@ let [first, second, ...rest] = [10, 20, 30, 40, 50];
         title: "Common String/Array Interview Patterns",
         content: `<p>Let's solve some classic problems to build your pattern recognition.</p>`,
         codePython: `# Pattern 1: Reverse a string (without built-in reverse)
-def reverseString(str):
-  result = ""
-  for (i = len(str) - 1; i >= 0; i--):
-    result += str[i]
+def reverse_string(s):
+    chars = list(s)
+    left, right = 0, len(chars) - 1
+    while left < right:
+        chars[left], chars[right] = chars[right], chars[left]
+        left += 1
+        right -= 1
+    return ''.join(chars)
 
-  return result
+# Pythonic one-liner: s[::-1]
 
-# Pattern 2: Check if palindrome
-def isPalindrome(str):
-  cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, "")
-  return cleaned == cleaned.split("").reverse().join("")
+# Pattern 2: Remove duplicates (preserve order)
+def remove_duplicates(arr):
+    seen = set()
+    result = []
+    for item in arr:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result
 
-# Pattern 3: Remove duplicates from array
-def removeDups(arr):
-  return [...new Set(arr)]  # Set only keeps unique values
+# Pythonic: list(dict.fromkeys(arr))
 
-# SQL analogy: SELECT DISTINCT
-
-# Pattern 4: Count character frequency
-def charCount(str):
-  freq = {}
-  for item in str):
-    freq[char] = (freq[char] or 0) + 1
-
-  return freq
-
-# charCount("hello") → { h: 1, e: 1, l: 2, o: 1 }
-# SQL analogy: SELECT char, COUNT(*) GROUP BY char`,
+# Pattern 3: Most common element
+from collections import Counter
+def most_common(arr):
+    return Counter(arr).most_common(1)[0][0]`,
         code: `// Pattern 1: Reverse a string (without built-in reverse)
 function reverseString(str) {
   let result = "";
@@ -908,32 +852,39 @@ function charCount(str) {
 <p>When an array fills up, it creates a new array <strong>2x the size</strong> and copies everything over. This copy is O(n), but it happens so rarely that the average cost per insertion is still O(1).</p>`,
         codePython: `# Let's build a simplified dynamic array to understand it
 class DynamicArray:
-  constructor():
-    this.data = []  # start with capacity 2
-    len(this) = 0
-    this.capacity = 2
+    def __init__(self):
+        self._data = [None] * 2   # start with capacity 2
+        self._length = 0
+        self._capacity = 2
 
-  push(value):
-    # If full, double the size
-    if (len(this) == this.capacity):
-      this.resize(this.capacity * 2)  # O(n) — but rare!
+    def push(self, value):
+        if self._length == self._capacity:
+            self._resize(self._capacity * 2)   # O(n) — but rare!
+        self._data[self._length] = value
+        self._length += 1
 
-    this.data[len(this)] = value
-    len(this)++
+    def get(self, index):
+        if index < 0 or index >= self._length:
+            raise IndexError("Index out of bounds")
+        return self._data[index]    # O(1)
 
-  get(index):
-    if (index < 0 or index >= len(this)) throw new Error("Out of bounds")
-    return this.data[index]  # O(1) — always fast
+    def pop(self):
+        if self._length == 0:
+            raise IndexError("Pop from empty array")
+        self._length -= 1
+        val = self._data[self._length]
+        self._data[self._length] = None
+        return val
 
-  resize(newCapacity):
-    newData = []
-    for (i = 0; i < len(this); i++):
-      newData[i] = this.data[i]  # copy everything
+    def _resize(self, new_capacity):
+        new_data = [None] * new_capacity
+        for i in range(self._length):
+            new_data[i] = self._data[i]
+        self._data = new_data
+        self._capacity = new_capacity
 
-    this.data = newData
-    this.capacity = newCapacity
-
-`,
+# Python's built-in list already does this!
+# list.append() is amortized O(1) for the same reason.`,
         code: `// Let's build a simplified dynamic array to understand it
 class DynamicArray {
   constructor() {
@@ -996,7 +947,7 @@ class DynamicArray {
 class ListNode:
     def __init__(self, value):
         self.value = value
-        self.next = None   # pointer to the next node
+        self.next = None    # pointer to the next node
 
 # Building a linked list manually
 head = ListNode(10)
@@ -1005,10 +956,9 @@ head.next.next = ListNode(30)
 
 # Traversal — follow the chain
 current = head
-while current is not None:
-    print(current.value)   # 10, 20, 30
-    current = current.next
-`,
+while current:
+    print(current.value)    # 10, 20, 30
+    current = current.next`,
         code: `// A linked list node — just two things: a value and a pointer
 class Node {
   constructor(value) {
@@ -1049,11 +999,11 @@ while (current !== null) {
     # Insert at the beginning — O(1)!
     def prepend(self, value):
         node = ListNode(value)
-        node.next = self.head   # new node points to old head
-        self.head = node        # new node becomes the head
+        node.next = self.head
+        self.head = node
         self.size += 1
 
-    # Insert at the end — O(n) (must walk to the end)
+    # Insert at the end — O(n)
     def append(self, value):
         node = ListNode(value)
         if not self.head:
@@ -1061,7 +1011,7 @@ while (current !== null) {
         else:
             current = self.head
             while current.next:
-                current = current.next  # walk to the last node
+                current = current.next
             current.next = node
         self.size += 1
 
@@ -1070,16 +1020,15 @@ while (current !== null) {
         if not self.head:
             return
         if self.head.value == value:
-            self.head = self.head.next  # skip the head
+            self.head = self.head.next
             self.size -= 1
             return
         current = self.head
         while current.next and current.next.value != value:
             current = current.next
         if current.next:
-            current.next = current.next.next  # skip target
-            self.size -= 1
-`,
+            current.next = current.next.next
+            self.size -= 1`,
         code: `class LinkedList {
   constructor() {
     this.head = null;
@@ -1141,29 +1090,28 @@ def reverse(head):
         current.next = prev      # reverse the pointer
         prev = current           # move prev forward
         current = nxt            # move current forward
-    return prev  # prev is the new head
+    return prev   # prev is the new head
 
 # Before: 1 → 2 → 3 → None
 # After:  None ← 1 ← 2 ← 3  (return 3)
 
-# 2. DETECT CYCLE — fast/slow pointer (Floyd's algorithm)
+# 2. DETECT CYCLE — fast/slow pointer (Floyd's)
 def has_cycle(head):
     slow = fast = head
     while fast and fast.next:
-        slow = slow.next         # moves 1 step
-        fast = fast.next.next    # moves 2 steps
+        slow = slow.next
+        fast = fast.next.next
         if slow is fast:
-            return True          # they met = cycle!
-    return False  # fast reached None = no cycle
+            return True
+    return False
 
-# 3. FIND MIDDLE — fast/slow pointer again!
+# 3. FIND MIDDLE — fast/slow pointer
 def find_middle(head):
     slow = fast = head
     while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
-    return slow  # when fast reaches end, slow is at middle
-`,
+    return slow`,
         code: `// 1. REVERSE a linked list — THE most common LL question
 function reverse(head) {
   let prev = null;
@@ -1240,23 +1188,23 @@ function findMiddle(head) {
 <li><strong>Browser history</strong>: Back button = pop the last page.</li>
 <li><strong>Parentheses matching</strong>: Classic interview problem!</li>
 </ul>`,
-        codePython: `# In Python, just use a list as a stack:
+        codePython: `# In Python, just use a list as a stack
 stack = []
-stack.append(1)   # [1]
-stack.append(2)   # [1, 2]
-stack.append(3)   # [1, 2, 3]
-stack.pop()       # returns 3, stack is [1, 2]
-stack.pop()       # returns 2, stack is [1]
+stack.append(1)    # [1]
+stack.append(2)    # [1, 2]
+stack.append(3)    # [1, 2, 3]
+stack.pop()        # returns 3, stack is [1, 2]
+stack.pop()        # returns 2, stack is [1]
 
-# Or use collections.deque for O(1) on both ends:
+# Or use collections.deque for O(1) on both ends
 from collections import deque
 stack = deque()
 stack.append(1)
-stack.pop()       # O(1) from the right
+stack.pop()        # O(1)
 
 # Peek at top without removing:
 stack.append(42)
-top = stack[-1]   # 42, stack unchanged`,
+top = stack[-1]    # 42, stack unchanged`,
         code: `// A stack is just an array used in a specific way
 class Stack {
   constructor() {
@@ -1289,18 +1237,14 @@ stack.pop();    // returns 2, stack is [1]`,
       {
         title: "Solving Problems with Stacks",
         content: `<p>The classic stack problem is <strong>Valid Parentheses</strong>. But stacks are also used for evaluating expressions, tracking min/max, and monotonic stack patterns.</p>`,
-        codePython: `# Classic: Valid Parentheses — already in your practice problems!
-# Here's another great one:
-
-# Min Stack — support get_min() in O(1) time
+        codePython: `# Min Stack — support get_min() in O(1) time
 class MinStack:
     def __init__(self):
         self.stack = []
-        self.min_stack = []  # tracks the minimum at each level
+        self.min_stack = []
 
     def push(self, val):
         self.stack.append(val)
-        # Push new minimum (or repeat current min)
         current_min = val if not self.min_stack else min(val, self.min_stack[-1])
         self.min_stack.append(current_min)
 
@@ -1309,13 +1253,13 @@ class MinStack:
         self.min_stack.pop()
 
     def get_min(self):
-        return self.min_stack[-1]   # O(1)!
+        return self.min_stack[-1]    # O(1)!
 
-# Example: push 5, 3, 7, 2
+# push 5, 3, 7, 2:
 # stack:     [5, 3, 7, 2]
-# min_stack: [5, 3, 3, 2]  ← tracks min at each point
+# min_stack: [5, 3, 3, 2]
 # get_min() → 2
-# pop() → removes 2, min_stack becomes [5, 3, 3], get_min() → 3`,
+# pop() → min_stack becomes [5, 3, 3], get_min() → 3`,
         code: `// Classic: Valid Parentheses — already in your practice problems!
 // Here's another great one:
 
@@ -1366,23 +1310,21 @@ class MinStack {
       {
         title: "Queues — First In, First Out",
         content: `<p>A queue is like a line at a coffee shop: first person in line gets served first — <strong>FIFO</strong>. In programming, queues are used for BFS (graph traversal), task scheduling, and message processing.</p>`,
-        codePython: `# Simple queue using an array
-# (Note: shift() is O(n) for arrays — for production use a linked list)
-class Queue:
-  constructor():
-    this.items = []
+        codePython: `# Queue — FIFO: first in, first out
+from collections import deque
 
-  enqueue(val) { this.items.append(val); }       # add to back
-  dequeue() { return this.items.shift(); }      # remove from front
-  peek() { return this.items[0]; }
-  isEmpty() { return this.len(items) == 0; }
+queue = deque()
+queue.append(1)       # enqueue: [1]
+queue.append(2)       # enqueue: [1, 2]
+queue.append(3)       # enqueue: [1, 2, 3]
+queue.popleft()       # dequeue: returns 1, queue is [2, 3]
+queue.popleft()       # dequeue: returns 2, queue is [3]
 
-q = new Queue()
-q.enqueue("A")  # [A]
-q.enqueue("B")  # [A, B]
-q.enqueue("C")  # [A, B, C]
-q.dequeue()     # returns "A", queue is [B, C]
-q.dequeue()     # returns "B", queue is [C]`,
+# deque gives O(1) on both ends
+# (list.pop(0) would be O(n) — never use it as a queue!)
+
+# Peek at front:
+front = queue[0] if queue else None`,
         code: `// Simple queue using an array
 // (Note: shift() is O(n) for arrays — for production use a linked list)
 class Queue {
@@ -1459,37 +1401,36 @@ function processJobs(jobs) {
         content: `<p>If you only master ONE data structure, make it hash tables. They give you <strong>O(1) average lookup, insert, and delete</strong>. In SQL, you know this as an <strong>INDEX</strong> — hash tables are the in-memory equivalent.</p>
 <h3>How They Work</h3>
 <p>A hash table uses a <strong>hash function</strong> to convert a key into an array index. Instead of searching through all items, you compute exactly where to look.</p>`,
-        codePython: `# Python has dicts (hash maps) and sets built in:
+        codePython: `# Python has dicts (hash maps) and sets built in
 
 # dict — key-value hash table
 ages = {}
-ages["Athena"] = 20     # hash("Athena") → index → store 20
-ages["Bob"] = 25        # hash("Bob") → index → store 25
-print(ages["Athena"])   # O(1) lookup → 20
+ages["Athena"] = 20
+ages["Bob"] = 25
+print(ages["Athena"])        # O(1) lookup → 20
 
-# Useful dict methods:
-ages.get("Charlie", 0)  # returns 0 if key missing (no crash!)
-"Bob" in ages           # True — O(1) membership check
-del ages["Bob"]         # delete key
-len(ages)               # 1
+# Useful dict methods
+ages.get("Charlie", 0)       # 0 if key missing (no crash!)
+"Bob" in ages                # True — O(1) check
+del ages["Bob"]
+len(ages)                    # 1
 
 # defaultdict — auto-creates missing keys
 from collections import defaultdict
 groups = defaultdict(list)
-groups["a"].append(1)   # no KeyError! creates [] first
+groups["a"].append(1)        # no KeyError!
 
 # Counter — counts occurrences
 from collections import Counter
-counts = Counter("abracadabra")  # {'a': 5, 'b': 2, 'r': 2, ...}
+counts = Counter("abracadabra")   # {'a': 5, 'b': 2, ...}
 
-# set — like a dict with only keys (no values)
-# Perfect for "have I seen this before?" checks
+# set — keys only, no values
 seen = set()
 seen.add(5)
 seen.add(3)
-seen.add(5)             # duplicate — ignored!
-5 in seen               # True — O(1)
-len(seen)               # 2`,
+seen.add(5)                  # duplicate ignored
+5 in seen                    # True — O(1)
+len(seen)                    # 2`,
         code: `// JavaScript has two hash table types:
 // 1. Objects {} — keys must be strings
 // 2. Map — keys can be anything (preferred)
@@ -1540,36 +1481,32 @@ seen.size;    // 2`,
 <li>"Group items by property" → Map with array values</li>
 </ul>`,
         codePython: `# Pattern 1: Frequency Counter
-def mostFrequent(arr):
-  freq = new Map()
-  for item in arr):
-    freq.set(item, (freq.get(item) or 0) + 1)
+from collections import Counter
 
-  # SQL equivalent: SELECT item, COUNT(*) GROUP BY item
+def most_frequent(arr):
+    counts = Counter(arr)
+    return counts.most_common(1)[0][0]
+    # SQL equivalent: SELECT item, COUNT(*) GROUP BY item ORDER BY COUNT(*) DESC LIMIT 1
 
-  maxItem, maxCount = 0
-  for item in freq):
-    if (count > maxCount):
-      maxItem = item
-      maxCount = count
+# Pattern 2: Two Sum with hash map
+def two_sum(nums, target):
+    seen = {}    # value → index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
 
-  return maxItem
+# Pattern 3: Group by property
+def group_by_length(words):
+    groups = defaultdict(list)
+    for word in words:
+        groups[len(word)].append(word)
+    return dict(groups)
 
-# Pattern 2: Two Sum (uses hash map for O(1) complement lookup)
-def twoSum(nums, target):
-  seen = new Map()  # value → index
-  for (i = 0; i < len(nums); i++):
-    complement = target - nums[i]
-    if (seen.has(complement)):
-      return [seen.get(complement), i]
-
-    seen.set(nums[i], i)
-
-# Pattern 3: Check for duplicates (one line!)
-def hasDuplicates(arr):
-  return new Set(arr).size != len(arr)
-
-# SQL: SELECT COUNT(*) != COUNT(DISTINCT col) FROM table`,
+# Pattern 4: Find duplicates
+def has_duplicate(arr):
+    return len(arr) != len(set(arr))`,
         code: `// Pattern 1: Frequency Counter
 function mostFrequent(arr) {
   const freq = new Map();
@@ -1651,45 +1588,54 @@ function hasDuplicates(arr) {
       {
         title: "How to Analyze Code Complexity",
         content: `<p>Here's the systematic approach. Practice this until it's automatic.</p>`,
-        codePython: `# O(1) — constant
-def getFirst(arr):
-  return arr[0]  # one operation, regardless of array size
+        codePython: `# O(1) — constant: doesn't grow with input size
+def get_first(arr):
+    return arr[0]
 
-# O(n) — linear (single loop)
-def findMax(arr):
-  max = arr[0]
-  for (i = 1; i < len(arr); i++) {  # n iterations
-    if (arr[i] > max) max = arr[i]
+# O(n) — linear: grows proportionally
+def find_max(arr):
+    max_val = arr[0]
+    for num in arr:
+        if num > max_val:
+            max_val = num
+    return max_val
 
-  return max
+# O(n²) — quadratic: nested loops
+def has_pair_with_sum(arr, target):
+    for i in range(len(arr)):
+        for j in range(i + 1, len(arr)):
+            if arr[i] + arr[j] == target:
+                return True
+    return False
 
-# O(n²) — quadratic (nested loops over same data)
-def hasDuplicatePairs(arr):
-  for (i = 0; i < len(arr); i++) {        # n
-    for (j = i + 1; j < len(arr); j++) {  # n
-      if (arr[i] == arr[j]) return True
+# O(log n) — logarithmic: halving each step
+def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1`,
+        codePython: `def binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
 
-  return False
-
-# O(n log n) — sorting
-def sortedUnique(arr):
-  arr.sort((a, b) => a - b)  # O(n log n) — dominates
-  return [...new Set(arr)]    # O(n) — doesn't change overall
-
-# Rule: when adding complexities, keep the LARGEST term
-# O(n log n) + O(n) = O(n log n)
-
-# O(log n) — halving each step
-def binarySearch(arr, target):
-  left = 0, right = len(arr) - 1
-  while (left <= right):
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target) return mid
-    if (arr[mid] < target) left = mid + 1  # eliminate half
-    else right = mid - 1                    # eliminate half
-
-  return -1
-`,
+# Example: search for 7 in [1, 3, 5, 7, 9, 11]
+# Step 1: mid=2, arr[2]=5 < 7 → search right half
+# Step 2: mid=4, arr[4]=9 > 7 → search left half
+# Step 3: mid=3, arr[3]=7 == 7 → found at index 3!`,
         code: `// O(1) — constant
 function getFirst(arr) {
   return arr[0];  // one operation, regardless of array size
@@ -1740,28 +1686,21 @@ function binarySearch(arr, target) {
         title: "Space Complexity",
         content: `<p>Time complexity measures speed. Space complexity measures <strong>how much extra memory</strong> your solution uses (beyond the input).</p>`,
         codePython: `# O(1) space — uses a fixed number of variables
-def findMax(arr):
-  max = arr[0]  # just one extra variable
-  for item in arr):
-    if (num > max) max = num
+def find_max(arr):
+    max_val = arr[0]     # just one extra variable
+    for num in arr:
+        max_val = max(max_val, num)
+    return max_val
 
-  return max
-
-# O(n) space — creates a new data structure proportional to input
-def removeDuplicates(arr):
-  seen = new Set()  # could grow up to n elements
-  result = []       # could grow up to n elements
-  for item in arr):
-    if (!seen.has(num)):
-      seen.add(num)
-      result.append(num)
-
-  return result
-
-# Trade-off: Two Sum
-# O(n²) time, O(1) space — brute force (two nested loops)
-# O(n) time, O(n) space — hash map (faster but uses more memory)
-# Usually: optimize for TIME and accept the space cost.`,
+# O(n) space — grows with input
+def remove_duplicates(arr):
+    seen = set()         # set grows up to n elements
+    result = []
+    for item in arr:
+        if item not in seen:
+            seen.add(item)
+            result.append(item)
+    return result`,
         code: `// O(1) space — uses a fixed number of variables
 function findMax(arr) {
   let max = arr[0];  // just one extra variable
@@ -1810,27 +1749,6 @@ function removeDuplicates(arr) {
         title: "Binary Search — The Power of Halving",
         content: `<p>Binary search is beautifully simple: if data is sorted, you can eliminate HALF the remaining elements each step. Instead of checking 1 million items one by one (O(n)), you find the answer in ~20 steps (O(log n)).</p>
 <p><strong>SQL analogy:</strong> When you have an INDEX on a column, the database uses something very similar to binary search (B-tree lookup) instead of scanning every row.</p>`,
-        codePython: `def binarySearch(arr, target):
-  left = 0
-  right = len(arr) - 1
-  while (left <= right):
-    # Find the middle (avoid overflow with this formula)
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target):
-      return mid           # Found it!
-    } else if (arr[mid] < target):
-      left = mid + 1       # Target is in right half
-    } else:
-      right = mid - 1      # Target is in left half
-
-  return -1  # Not found
-
-# Example: find 7 in [1, 3, 5, 7, 9, 11, 13]
-# Step 1: mid=3 (value 7) — FOUND! Just 1 step.
-
-# Example: find 11 in [1, 3, 5, 7, 9, 11, 13]
-# Step 1: mid=3 (value 7) — 11 > 7, search right: [9, 11, 13]
-# Step 2: mid=5 (value 11) — FOUND! 2 steps for 7 elements.`,
         code: `function binarySearch(arr, target) {
   let left = 0;
   let right = arr.length - 1;
@@ -1864,34 +1782,39 @@ function removeDuplicates(arr) {
         title: "Binary Search Variations",
         content: `<p>The basic template is just the start. These variations appear constantly in interviews.</p>`,
         codePython: `# Variation 1: Find FIRST occurrence (leftmost)
-def findFirst(arr, target):
-  left = 0, right = len(arr) - 1, result = -1
-  while (left <= right):
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target):
-      result = mid       # found one, but keep searching LEFT
-      right = mid - 1    # for an earlier occurrence
-    } else if (arr[mid] < target):
-      left = mid + 1
-    } else:
-      right = mid - 1
+def find_first(arr, target):
+    left, right = 0, len(arr) - 1
+    result = -1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            result = mid
+            right = mid - 1     # keep searching left
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return result
 
-  return result
+# Variation 2: Find LAST occurrence (rightmost)
+def find_last(arr, target):
+    left, right = 0, len(arr) - 1
+    result = -1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            result = mid
+            left = mid + 1      # keep searching right
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return result
 
-# [1, 2, 2, 2, 3] target=2 → returns index 1 (first 2)
-
-# Variation 2: Find insert position (where would target go?)
-def searchInsert(arr, target):
-  left = 0, right = len(arr) - 1
-  while (left <= right):
-    mid = Math.floor((left + right) / 2)
-    if (arr[mid] == target) return mid
-    if (arr[mid] < target) left = mid + 1
-    else right = mid - 1
-
-  return left  # left is where target should be inserted
-
-# [1, 3, 5, 7] target=4 → returns 2 (between 3 and 5)`,
+# Python shortcut: bisect module
+import bisect
+i = bisect.bisect_left(arr, target)    # first occurrence
+j = bisect.bisect_right(arr, target)   # one past last`,
         code: `// Variation 1: Find FIRST occurrence (leftmost)
 function findFirst(arr, target) {
   let left = 0, right = arr.length - 1, result = -1;
@@ -1946,30 +1869,25 @@ function searchInsert(arr, target) {
 <h3>The Simple Sorts — O(n²)</h3>
 <p>These are easy to understand but slow for large inputs. Know them conceptually but don't use them.</p>`,
         codePython: `# Bubble Sort — swap adjacent elements repeatedly
-# Like bubbles rising: largest values "bubble" to the end
-def bubbleSort(arr):
-  for (i = 0; i < len(arr); i++):
-    for (j = 0; j < len(arr) - 1 - i; j++):
-      if (arr[j] > arr[j + 1]):
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]  # swap
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+# O(n²) time — educational only, never use in production
 
-  return arr
-
-# Insertion Sort — like sorting cards in your hand
-# Pick each card and insert it in the right position
-def insertionSort(arr):
-  for (i = 1; i < len(arr); i++):
-    current = arr[i]
-    j = i - 1
-    while (j >= 0 and arr[j] > current):
-      arr[j + 1] = arr[j]  # shift larger elements right
-      j--
-
-    arr[j + 1] = current   # insert in correct position
-
-  return arr
-
-# Fun fact: insertion sort is actually FAST for nearly-sorted data!`,
+# Insertion Sort — good for small/nearly-sorted arrays
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr`,
         code: `// Bubble Sort — swap adjacent elements repeatedly
 // Like bubbles rising: largest values "bubble" to the end
 function bubbleSort(arr) {
@@ -2008,32 +1926,32 @@ function insertionSort(arr) {
 <li><strong>Conquer</strong>: Recursively sort each half</li>
 <li><strong>Combine</strong>: Merge the two sorted halves</li>
 </ol>`,
-        codePython: `def mergeSort(arr):
-  # Base case: arrays of length 0 or 1 are already sorted
-  if (len(arr) <= 1) return arr
-  # Divide
-  mid = Math.floor(len(arr) / 2)
-  left = mergeSort(arr.slice(0, mid))    # sort left half
-  right = mergeSort(arr.slice(mid))       # sort right half
+        codePython: `def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
 
-  # Merge the two sorted halves
-  return merge(left, right)
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+
+    return merge(left, right)
 
 def merge(left, right):
-  result = []
-  i = 0, j = 0
-  while (i < len(left) and j < len(right)):
-    if (left[i] <= right[j]):
-      result.append(left[i++])
-    } else:
-      result.append(right[j++])
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
 
-  # Add remaining elements
-  return [...result, ...left.slice(i), ...right.slice(j)]
-
-# Time: O(n log n) — log n levels of splitting, n work per level
-# Space: O(n) — creates new arrays at each step
-# Stable: yes (equal elements keep their original order)`,
+# O(n log n) time, O(n) space — stable sort
+# Python's built-in sorted() uses Timsort (merge + insertion)`,
         code: `function mergeSort(arr) {
   // Base case: arrays of length 0 or 1 are already sorted
   if (arr.length <= 1) return arr;
@@ -2097,22 +2015,6 @@ function merge(left, right) {
 <li><strong>Base case</strong>: When to STOP recursing. Without this, you get infinite recursion (stack overflow).</li>
 <li><strong>Recursive case</strong>: The function calls itself with a SMALLER input, getting closer to the base case.</li>
 </ul>`,
-        codePython: `# Classic: Factorial (n! = n × (n-1) × ... × 1)
-def factorial(n):
-  if (n <= 1) return 1        # base case
-  return n * factorial(n - 1) # recursive case
-
-# factorial(4) = 4 * factorial(3)
-#              = 4 * 3 * factorial(2)
-#              = 4 * 3 * 2 * factorial(1)
-#              = 4 * 3 * 2 * 1 = 24
-
-# Classic: Fibonacci
-def fib(n):
-  if (n <= 1) return n            # base cases: fib(0)=0, fib(1)=1
-  return fib(n - 1) + fib(n - 2) # recursive case
-
-# WARNING: This is O(2^n)! Very slow. We'll optimize with DP in Week 8.`,
         code: `// Classic: Factorial (n! = n × (n-1) × ... × 1)
 function factorial(n) {
   if (n <= 1) return 1;        // base case
@@ -2137,26 +2039,25 @@ function fib(n) {
         content: `<p>Backtracking is recursion with a twist: you make a choice, explore, and if it doesn't work, you <strong>undo the choice</strong> and try something else. It's like navigating a maze — if you hit a dead end, go back and try a different path.</p>`,
         codePython: `# Generate all permutations of [1, 2, 3]
 def permutations(nums):
-  result = []
-  def backtrack(current, remaining):
-    # Base case: used all numbers
-    if (len(remaining) == 0):
-      result.append(current[:])
-      return
+    result = []
 
-    for (i = 0; i < len(remaining); i++):
-      # CHOOSE: pick remaining[i]
-      current.append(remaining[i])
-      newRemaining = [...remaining.slice(0, i), ...remaining.slice(i + 1)]
-      # EXPLORE: recurse with remaining numbers
-      backtrack(current, newRemaining)
-      # UNDO: remove the choice (backtrack!)
-      current.pop()
+    def backtrack(path, remaining):
+        if not remaining:
+            result.append(path[:])    # found a permutation
+            return
+        for i in range(len(remaining)):
+            path.append(remaining[i])           # choose
+            backtrack(path, remaining[:i] + remaining[i+1:])  # explore
+            path.pop()                          # unchoose (backtrack)
 
-  backtrack([], nums)
-  return result
+    backtrack([], nums)
+    return result
 
-# permutations([1,2,3]) → [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]`,
+# permutations([1,2,3]) → [[1,2,3],[1,3,2],[2,1,3],...]
+
+# Python shortcut:
+from itertools import permutations as perms
+list(perms([1, 2, 3]))`,
         code: `// Generate all permutations of [1, 2, 3]
 function permutations(nums) {
   const result = [];
@@ -2219,30 +2120,28 @@ function permutations(nums) {
 <li><strong>Fast/slow</strong>: Different speeds (e.g., linked list cycle detection)</li>
 </ul>`,
         codePython: `# Pattern 1: Converging — Two Sum on sorted array
-def twoSumSorted(arr, target):
-  left = 0, right = len(arr) - 1
-  while (left < right):
-    sum = arr[left] + arr[right]
-    if (sum == target) return [left, right]
-    if (sum < target) left++    # need bigger sum
-    else right--                # need smaller sum
+def two_sum_sorted(nums, target):
+    left, right = 0, len(nums) - 1
+    while left < right:
+        total = nums[left] + nums[right]
+        if total == target:
+            return [left, right]
+        elif total < target:
+            left += 1
+        else:
+            right -= 1
+    return []
 
-  return [-1, -1]
-
-# O(n) instead of O(n²)!
-
-# Pattern 2: Same direction — Remove duplicates in-place
-def removeDuplicates(arr):
-  if (len(arr) == 0) return 0
-  slow = 0  # points to last unique element
-  for (fast = 1; fast < len(arr); fast++):
-    if (arr[fast] != arr[slow]):
-      slow++
-      arr[slow] = arr[fast]
-
-  return slow + 1  # length of unique portion
-
-# [1,1,2,2,3] → slow walks to: [1,2,3,_,_], returns 3`,
+# Pattern 2: Same direction — remove duplicates in-place
+def remove_duplicates_sorted(nums):
+    if not nums:
+        return 0
+    write = 1
+    for read in range(1, len(nums)):
+        if nums[read] != nums[read - 1]:
+            nums[write] = nums[read]
+            write += 1
+    return write`,
         code: `// Pattern 1: Converging — Two Sum on sorted array
 function twoSumSorted(arr, target) {
   let left = 0, right = arr.length - 1;
@@ -2274,37 +2173,26 @@ function removeDuplicates(arr) {
       {
         title: "Sliding Window — Track a Moving Range",
         content: `<p>Sliding window maintains a "window" (subarray) that slides across the array. Instead of recalculating everything for each position (O(n²)), you update the window incrementally (O(n)).</p>`,
-        codePython: `# Fixed-size window: maximum sum of k consecutive elements
-def maxSumWindow(arr, k):
-  # Calculate first window
-  windowSum = 0
-  for (i = 0; i < k; i++):
-    windowSum += arr[i]
-
-  maxSum = windowSum
-  # Slide the window: add one from right, remove one from left
-  for (i = k; i < len(arr); i++):
-    windowSum += arr[i]        # add new element
-    windowSum -= arr[i - k]    # remove old element
-    maxSum = Math.max(maxSum, windowSum)
-
-  return maxSum
+        codePython: `# Fixed-size window: max sum of k consecutive elements
+def max_sum_k(arr, k):
+    window_sum = sum(arr[:k])
+    max_sum = window_sum
+    for i in range(k, len(arr)):
+        window_sum += arr[i] - arr[i - k]   # slide: add right, drop left
+        max_sum = max(max_sum, window_sum)
+    return max_sum
 
 # Variable-size window: longest substring without repeating chars
-def longestUnique(s):
-  seen = new Set()
-  left = 0, maxLen = 0
-  for (right = 0; right < len(s); right++):
-    # Shrink window until no duplicate
-    while (seen.has(s[right])):
-      seen.delete(s[left])
-      left++
-
-    seen.add(s[right])
-    maxLen = Math.max(maxLen, right - left + 1)
-
-  return maxLen
-`,
+def length_of_longest_substring(s):
+    char_set = set()
+    left = max_len = 0
+    for right in range(len(s)):
+        while s[right] in char_set:
+            char_set.remove(s[left])
+            left += 1
+        char_set.add(s[right])
+        max_len = max(max_len, right - left + 1)
+    return max_len`,
         code: `// Fixed-size window: maximum sum of k consecutive elements
 function maxSumWindow(arr, k) {
   // Calculate first window
@@ -2376,22 +2264,22 @@ function longestUnique(s) {
 <p>A binary tree is a tree where each node has <strong>at most 2 children</strong> (left and right).</p>`,
         codePython: `# A tree node
 class TreeNode:
-  constructor(value):
-    this.value = value
-    this.left = None   # left child
-    this.right = None  # right child
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
 
-# Build a tree manually
+# Building a tree manually
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
 #        1
-#       / \\
+#       / \
 #      2   3
-#     / \\
-#    4   5
-root = new TreeNode(1)
-root.left = new TreeNode(2)
-root.right = new TreeNode(3)
-root.left.left = new TreeNode(4)
-root.left.right = new TreeNode(5)`,
+#     / \
+#    4   5`,
         code: `// A tree node
 class TreeNode {
   constructor(value) {
@@ -2431,50 +2319,45 @@ root.left.right = new TreeNode(5);`,
       {
         title: "Tree Traversals — The Four Ways to Visit Every Node",
         content: `<p>Unlike arrays (just go left to right), trees can be visited in different orders. Each order has different uses.</p>`,
-        codePython: `# 1. INORDER: Left → Root → Right
-#    On a BST, this gives SORTED order!
-def inorder(node):
-  if (!node) return
-  inorder(node.left)          # visit left subtree
-  print(node.value)     # visit current node
-  inorder(node.right)         # visit right subtree
+        codePython: `# 1. INORDER: Left → Root → Right (gives sorted order for BST)
+def inorder(node, result=None):
+    if result is None:
+        result = []
+    if node:
+        inorder(node.left, result)
+        result.append(node.val)
+        inorder(node.right, result)
+    return result
 
-# For our tree: 4, 2, 5, 1, 3
+# 2. PREORDER: Root → Left → Right (useful for copying trees)
+def preorder(node, result=None):
+    if result is None:
+        result = []
+    if node:
+        result.append(node.val)
+        preorder(node.left, result)
+        preorder(node.right, result)
+    return result
 
-# 2. PREORDER: Root → Left → Right
-#    Used to COPY or SERIALIZE a tree
-def preorder(node):
-  if (!node) return
-  print(node.value)     # visit current FIRST
-  preorder(node.left)
-  preorder(node.right)
+# 3. LEVEL ORDER (BFS): level by level
+from collections import deque
 
-# For our tree: 1, 2, 4, 5, 3
-
-# 3. POSTORDER: Left → Right → Root
-#    Used to DELETE a tree (children before parent)
-def postorder(node):
-  if (!node) return
-  postorder(node.left)
-  postorder(node.right)
-  print(node.value)     # visit current LAST
-
-# For our tree: 4, 5, 2, 3, 1
-
-# 4. LEVEL ORDER (BFS): Visit level by level using a QUEUE
-def levelOrder(root):
-  if (!root) return []
-  result = []
-  queue = [root]
-  while (len(queue) > 0):
-    node = queue.shift()
-    result.append(node.value)
-    if (node.left) queue.append(node.left)
-    if (node.right) queue.append(node.right)
-
-  return result
-
-# For our tree: [1, 2, 3, 4, 5]`,
+def level_order(root):
+    if not root:
+        return []
+    result = []
+    queue = deque([root])
+    while queue:
+        level = []
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            level.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        result.append(level)
+    return result`,
         code: `// 1. INORDER: Left → Root → Right
 //    On a BST, this gives SORTED order!
 function inorder(node) {
@@ -2525,29 +2408,29 @@ function levelOrder(root) {
         title: "Common Tree Interview Problems",
         content: `<p>Tree problems almost always use recursion. The pattern: solve for the current node assuming the recursive calls on children give correct results.</p>`,
         codePython: `# Max Depth of a tree
-def maxDepth(node):
-  if (!node) return 0
-  return 1 + Math.max(maxDepth(node.left), maxDepth(node.right))
+def max_depth(node):
+    if not node:
+        return 0
+    return 1 + max(max_depth(node.left), max_depth(node.right))
 
-# "My depth = 1 + the deeper of my children's depths"
+# Invert a tree (mirror it)
+def invert_tree(node):
+    if not node:
+        return None
+    node.left, node.right = node.right, node.left
+    invert_tree(node.left)
+    invert_tree(node.right)
+    return node
 
-# Invert a tree (mirror image) — famous Google interview question
-def invertTree(node):
-  if (!node) return None
-  # Swap left and right children
-  [node.left, node.right] = [node.right, node.left]
-  invertTree(node.left)
-  invertTree(node.right)
-  return node
-
-# Check if two trees are identical
-def isSameTree(p, q):
-  if (!p and !q) return True              # both None
-  if (!p or !q) return False             # one None
-  return p.value == q.value              # same value
-    and isSameTree(p.left, q.left)         # same left subtree
-    and isSameTree(p.right, q.right)      # same right subtree
-`,
+# Check if two trees are the same
+def is_same_tree(p, q):
+    if not p and not q:
+        return True
+    if not p or not q:
+        return False
+    return (p.val == q.val
+            and is_same_tree(p.left, q.left)
+            and is_same_tree(p.right, q.right))`,
         code: `// Max Depth of a tree
 function maxDepth(node) {
   if (!node) return 0;
